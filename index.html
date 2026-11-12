@@ -1,41 +1,371 @@
 <!DOCTYPE html>
-<html lang="fa">
+<html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>سایت من - amirzh0</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>~/amirzh0 — Developer Space</title>
+    <!-- فونت‌های وزیرمتن، لاله‌زار و JetBrains Mono برای کدها -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Lalezar&family=Vazirmatn:wght@300;400;600;800&display=swap" rel="stylesheet">
+    
     <style>
-        body {
-            font-family: Tahoma, sans-serif;
-            text-align: center;
-            padding: 50px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+        :root {
+            --bg-dark: #090d16;
+            --card-bg: rgba(17, 24, 39, 0.75);
+            --border-glow: rgba(56, 189, 248, 0.25);
+            --accent-cyan: #38bdf8;
+            --accent-green: #4ade80;
+            --accent-purple: #c084fc;
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
             margin: 0;
+            padding: 0;
         }
-        h1 {
-            font-size: 3em;
+
+        body {
+            font-family: 'Vazirmatn', Tahoma, sans-serif;
+            background-color: var(--bg-dark);
+            /* پس‌زمینه شبکه‌ای (Grid) به سبک محیط‌های مهندسی */
+            background-image: 
+                radial-gradient(circle at 15% 20%, rgba(56, 189, 248, 0.12), transparent 35%),
+                radial-gradient(circle at 85% 80%, rgba(192, 132, 252, 0.12), transparent 35%),
+                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 100% 100%, 100% 100%, 32px 32px, 32px 32px;
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            overflow-x: hidden;
         }
-        .card {
-            background: rgba(255,255,255,0.2);
-            border-radius: 20px;
-            padding: 30px;
-            margin: 20px auto;
-            max-width: 600px;
-            backdrop-filter: blur(10px);
+
+        .terminal-window {
+            width: 100%;
+            max-width: 680px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-glow);
+            border-radius: 16px;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            box-shadow: 
+                0 25px 50px -12px rgba(0, 0, 0, 0.7),
+                0 0 25px rgba(56, 189, 248, 0.08);
+            overflow: hidden;
+            transition: transform 0.3s ease, border-color 0.3s ease;
         }
-        a {
-            color: #ffd700;
+
+        .terminal-window:hover {
+            border-color: rgba(56, 189, 248, 0.5);
+        }
+
+        /* هدر ترمینال */
+        .terminal-header {
+            background: rgba(15, 23, 42, 0.9);
+            padding: 12px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+            direction: ltr;
+        }
+
+        .window-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .dot.close { background: #ff5f56; }
+        .dot.minimize { background: #ffbd2e; }
+        .dot.maximize { background: #27c93f; }
+
+        .terminal-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .status-badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--accent-green);
+            background: rgba(74, 222, 128, 0.1);
+            padding: 3px 10px;
+            border-radius: 99px;
+            border: 1px solid rgba(74, 222, 128, 0.25);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--accent-green);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--accent-green);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        /* بدنه اصلی */
+        .terminal-body {
+            padding: 32px;
+        }
+
+        .hero-title {
+            font-family: 'Lalezar', cursive;
+            font-size: 2.6rem;
+            font-weight: normal;
+            margin-bottom: 8px;
+            background: linear-gradient(90deg, #fff, var(--accent-cyan), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            line-height: 1.7;
+            margin-bottom: 24px;
+        }
+
+        /* باکس کد برنامه نویسی */
+        .code-block {
+            background: rgba(9, 13, 22, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 18px 20px;
+            margin-bottom: 24px;
+            direction: ltr;
+            text-align: left;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            line-height: 1.7;
+            position: relative;
+            overflow-x: auto;
+        }
+
+        .code-line {
+            display: block;
+        }
+
+        .c-keyword { color: #ff7b72; }
+        .c-prop { color: #79c0ff; }
+        .c-string { color: #a5d6ff; }
+        .c-bool { color: #56d364; }
+        .c-comment { color: #6e7681; font-style: italic; }
+
+        /* خط فرمان زنده */
+        .prompt-box {
+            background: rgba(56, 189, 248, 0.06);
+            border-right: 3px solid var(--accent-cyan);
+            padding: 12px 16px;
+            border-radius: 6px;
+            margin-bottom: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .typing-text {
+            font-size: 0.95rem;
+            color: #e2e8f0;
+            font-weight: 600;
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 8px;
+            height: 16px;
+            background: var(--accent-cyan);
+            vertical-align: middle;
+            margin-right: 4px;
+            animation: blink 1s step-end infinite;
+        }
+
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+
+        /* فوتر و دکمه‌ها */
+        .card-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            flex-wrap: wrap;
+            gap: 14px;
+        }
+
+        .author {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .author code {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--accent-cyan);
+            background: rgba(56, 189, 248, 0.12);
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+
+        .btn-github {
+            font-family: 'JetBrains Mono', 'Vazirmatn', sans-serif;
+            font-size: 0.85rem;
+            color: var(--text-main);
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 8px 16px;
+            border-radius: 8px;
             text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-github:hover {
+            background: var(--accent-cyan);
+            color: #090d16;
+            border-color: var(--accent-cyan);
+            font-weight: 600;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(56, 189, 248, 0.3);
+        }
+
+        @media (max-width: 500px) {
+            .terminal-body { padding: 22px; }
+            .hero-title { font-size: 2rem; }
+            .code-block { font-size: 0.8rem; }
         }
     </style>
 </head>
 <body>
-    <div class="card">
-        <h1>🚀 سایت من روی گیت‌هاب</h1>
-        <p>این سایت با GitHub Pages ساخته شده و رایگان است!</p>
-        <p>✨ به زودی محتوای جذاب ✨</p>
-        <hr>
-        <p>ساخته شده با ❤️ توسط sa</p>
+
+    <div class="terminal-window">
+        <!-- نوار بالای پنجره به سبک ترمینال لینوکس/مک -->
+        <div class="terminal-header">
+            <div class="window-controls">
+                <span class="dot close"></span>
+                <span class="dot minimize"></span>
+                <span class="dot maximize"></span>
+            </div>
+            <div class="terminal-title">
+                <span>amirzh0@github-pages: ~/portfolio</span>
+            </div>
+            <div class="status-badge">
+                <span class="status-dot"></span>
+                ONLINE
+            </div>
+        </div>
+
+        <!-- محتوای داخل پنجره -->
+        <div class="terminal-body">
+            <h1 class="hero-title">🚀 فضای کاربری من در گیت‌هاب</h1>
+            <p class="subtitle">
+                این پروژه روی زیرساخت ابری <strong>GitHub Pages</strong> مستقر شده و به‌صورت متن‌باز در حال توسعه است.
+            </p>
+
+            <!-- بخش نمایش کد به سبک IDE -->
+            <div class="code-block">
+                <span class="code-line"><span class="c-comment">// Project configuration &amp; status</span></span>
+                <span class="code-line"><span class="c-keyword">const</span> <span class="c-prop">developer</span> = {</span>
+                <span class="code-line">&nbsp;&nbsp;handle: <span class="c-string">"@amirzh0"</span>,</span>
+                <span class="code-line">&nbsp;&nbsp;maintainedBy: <span class="c-string">"sa"</span>,</span>
+                <span class="code-line">&nbsp;&nbsp;host: <span class="c-string">"GitHub Pages"</span>,</span>
+                <span class="code-line">&nbsp;&nbsp;buildingCoolStuff: <span class="c-bool">true</span></span>
+                <span class="code-line">};</span>
+            </div>
+
+            <!-- باکس وضعیت با افکت تایپ زنده -->
+            <div class="prompt-box">
+                <div>
+                    <span class="typing-text" id="typewriter"></span>
+                    <span class="cursor"></span>
+                </div>
+            </div>
+
+            <!-- فوتر کارت -->
+            <div class="card-footer">
+                <div class="author">
+                    کامپایل شده با ❤️ و ☕ توسط <code>sa</code>
+                </div>
+                <a href="https://github.com/amirzh0" target="_blank" class="btn-github">
+                    <span>GitHub Profile</span>
+                    <span>→</span>
+                </a>
+            </div>
+        </div>
     </div>
+
+    <script>
+        // افکت تایپ خودکار جملات
+        const messages = [
+            "✨ به زودی پروژه‌ها و ابزارهای جذاب اضافه می‌شوند...",
+            "⚡ در حال نوشتن کدهای تمیز و بهینه...",
+            "🔒 محیط تست و توسعه آماده به کار است."
+        ];
+        
+        let msgIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+        const target = document.getElementById("typewriter");
+
+        function typeEffect() {
+            const currentMsg = messages[msgIndex];
+            
+            if (isDeleting) {
+                target.textContent = currentMsg.substring(0, charIndex - 1);
+                charIndex--;
+            } else {
+                target.textContent = currentMsg.substring(0, charIndex + 1);
+                charIndex++;
+            }
+
+            let speed = isDeleting ? 35 : 70;
+
+            if (!isDeleting && charIndex === currentMsg.length) {
+                speed = 2200; // مکث بعد از کامل شدن جمله
+                isDeleting = true;
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                msgIndex = (msgIndex + 1) % messages.length;
+                speed = 400;
+            }
+
+            setTimeout(typeEffect, speed);
+        }
+
+        document.addEventListener("DOMContentLoaded", typeEffect);
+    </script>
 </body>
 </html>
