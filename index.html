@@ -1,371 +1,2801 @@
 <!DOCTYPE html>
-<html lang="fa" dir="rtl">
+<html lang="fa" dir="rtl" data-theme="cyan">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>~/amirzh0 — Developer Space</title>
-    <!-- فونت‌های وزیرمتن، لاله‌زار و JetBrains Mono برای کدها -->
+    <title>amirzh0 // CyberOS & Developer Workstation [by sa]</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Lalezar&family=Vazirmatn:wght@300;400;600;800&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Lalezar&family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
+        /* ==========================================================================
+           1. CORE DESIGN TOKENS & THEME VARIABLES
+           ========================================================================== */
         :root {
-            --bg-dark: #090d16;
-            --card-bg: rgba(17, 24, 39, 0.75);
-            --border-glow: rgba(56, 189, 248, 0.25);
-            --accent-cyan: #38bdf8;
-            --accent-green: #4ade80;
-            --accent-purple: #c084fc;
-            --text-main: #f1f5f9;
-            --text-muted: #94a3b8;
+            --bg-void: #050811;
+            --bg-deep: #090d16;
+            --bg-panel: rgba(15, 23, 42, 0.72);
+            --bg-panel-solid: #0f172a;
+            --bg-elevated: rgba(30, 41, 59, 0.65);
+            --bg-glass: rgba(13, 19, 33, 0.78);
+            --bg-code: #060911;
+
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #64748b;
+            --text-dim: #475569;
+
+            --accent-primary: #38bdf8;
+            --accent-primary-rgb: 56, 189, 248;
+            --accent-secondary: #818cf8;
+            --accent-secondary-rgb: 129, 140, 248;
+            --accent-success: #4ade80;
+            --accent-warning: #fbbf24;
+            --accent-danger: #f87171;
+
+            --border-subtle: rgba(255, 255, 255, 0.07);
+            --border-focus: rgba(56, 189, 248, 0.45);
+            --glow-primary: 0 0 25px rgba(56, 189, 248, 0.18);
+            --glow-strong: 0 0 35px rgba(56, 189, 248, 0.35);
+
+            --radius-sm: 6px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 22px;
+
+            --font-fa: 'Vazirmatn', system-ui, -apple-system, sans-serif;
+            --font-display: 'Lalezar', cursive;
+            --font-mono: 'JetBrains Mono', monospace;
+
+            --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-smooth: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        * {
+        [data-theme="matrix"] {
+            --accent-primary: #22c55e;
+            --accent-primary-rgb: 34, 197, 94;
+            --accent-secondary: #10b981;
+            --accent-secondary-rgb: 16, 185, 129;
+            --border-focus: rgba(34, 197, 94, 0.45);
+            --glow-primary: 0 0 25px rgba(34, 197, 94, 0.18);
+            --glow-strong: 0 0 35px rgba(34, 197, 94, 0.35);
+        }
+
+        [data-theme="synthwave"] {
+            --accent-primary: #e879f9;
+            --accent-primary-rgb: 232, 121, 249;
+            --accent-secondary: #38bdf8;
+            --accent-secondary-rgb: 56, 189, 248;
+            --border-focus: rgba(232, 121, 249, 0.45);
+            --glow-primary: 0 0 25px rgba(232, 121, 249, 0.18);
+            --glow-strong: 0 0 35px rgba(232, 121, 249, 0.35);
+        }
+
+        [data-theme="crimson"] {
+            --accent-primary: #fb7185;
+            --accent-primary-rgb: 251, 113, 133;
+            --accent-secondary: #f43f5e;
+            --accent-secondary-rgb: 244, 63, 94;
+            --border-focus: rgba(251, 113, 133, 0.45);
+            --glow-primary: 0 0 25px rgba(251, 113, 133, 0.18);
+            --glow-strong: 0 0 35px rgba(251, 113, 133, 0.35);
+        }
+
+        [data-theme="amber"] {
+            --accent-primary: #fbbf24;
+            --accent-primary-rgb: 251, 191, 36;
+            --accent-secondary: #f59e0b;
+            --accent-secondary-rgb: 245, 158, 11;
+            --border-focus: rgba(251, 191, 36, 0.45);
+            --glow-primary: 0 0 25px rgba(251, 191, 36, 0.18);
+            --glow-strong: 0 0 35px rgba(251, 191, 36, 0.35);
+        }
+
+        /* ==========================================================================
+           2. RESET, SCROLLBARS & GLOBAL BASE
+           ========================================================================== */
+        *, *::before, *::after {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
         }
 
-        body {
-            font-family: 'Vazirmatn', Tahoma, sans-serif;
-            background-color: var(--bg-dark);
-            /* پس‌زمینه شبکه‌ای (Grid) به سبک محیط‌های مهندسی */
-            background-image: 
-                radial-gradient(circle at 15% 20%, rgba(56, 189, 248, 0.12), transparent 35%),
-                radial-gradient(circle at 85% 80%, rgba(192, 132, 252, 0.12), transparent 35%),
-                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-            background-size: 100% 100%, 100% 100%, 32px 32px, 32px 32px;
-            color: var(--text-main);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            overflow-x: hidden;
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
         }
 
-        .terminal-window {
-            width: 100%;
-            max-width: 680px;
-            background: var(--card-bg);
-            border: 1px solid var(--border-glow);
-            border-radius: 16px;
+        body {
+            font-family: var(--font-fa);
+            background-color: var(--bg-void);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            line-height: 1.6;
+            selection-background-color: var(--accent-primary);
+        }
+
+        ::selection {
+            background: rgba(var(--accent-primary-rgb), 0.3);
+            color: #fff;
+        }
+
+        ::-webkit-scrollbar {
+            width: 7px;
+            height: 7px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-void);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(var(--accent-primary-rgb), 0.35);
+            border-radius: 99px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(var(--accent-primary-rgb), 0.65);
+        }
+
+        /* ==========================================================================
+           3. BACKGROUND EFFECTS (CANVAS, CRT SCANLINES, GRID)
+           ========================================================================== */
+        #bg-canvas {
+            position: fixed;
+            inset: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.55;
+        }
+
+        .cyber-grid-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            background-image: 
+                radial-gradient(circle at 50% 0%, rgba(var(--accent-primary-rgb), 0.12), transparent 55%),
+                linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+            background-size: 100% 100%, 40px 40px, 40px 40px;
+        }
+
+        .scanlines {
+            position: fixed;
+            inset: 0;
+            z-index: 999;
+            pointer-events: none;
+            background: linear-gradient(
+                rgba(18, 16, 16, 0) 50%, 
+                rgba(0, 0, 0, 0.18) 50%
+            );
+            background-size: 100% 4px;
+            opacity: 0.35;
+        }
+
+        .scanlines.disabled {
+            display: none;
+        }
+
+        /* ==========================================================================
+           4. KERNEL BOOT SEQUENCE OVERLAY
+           ========================================================================== */
+        #boot-screen {
+            position: fixed;
+            inset: 0;
+            background: #03050a;
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 35px;
+            font-family: var(--font-mono);
+            direction: ltr;
+            transition: opacity 0.6s ease, visibility 0.6s ease;
+        }
+
+        #boot-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .boot-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 15px;
+            color: var(--accent-primary);
+            font-size: 0.85rem;
+        }
+
+        .boot-logs {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px 0;
+            font-size: 0.82rem;
+            line-height: 1.7;
+            color: #94a3b8;
+        }
+
+        .boot-log-line {
+            margin-bottom: 4px;
+            display: flex;
+            gap: 12px;
+        }
+
+        .boot-ok { color: #4ade80; font-weight: 700; }
+        .boot-warn { color: #fbbf24; font-weight: 700; }
+        .boot-info { color: #38bdf8; font-weight: 700; }
+
+        .boot-footer {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .boot-progress-wrap {
+            flex: 1;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 99px;
+            overflow: hidden;
+        }
+
+        .boot-progress-bar {
+            height: 100%;
+            width: 0%;
+            background: var(--accent-primary);
+            box-shadow: 0 0 12px var(--accent-primary);
+            transition: width 0.1s linear;
+        }
+
+        .btn-skip-boot {
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-family: var(--font-mono);
+            font-size: 0.78rem;
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+
+        .btn-skip-boot:hover {
+            background: var(--accent-primary);
+            color: #000;
+            border-color: var(--accent-primary);
+        }
+
+        /* ==========================================================================
+           5. TOP TELEMETRY NAVBAR
+           ========================================================================== */
+        .top-navbar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(9, 13, 22, 0.85);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
-            box-shadow: 
-                0 25px 50px -12px rgba(0, 0, 0, 0.7),
-                0 0 25px rgba(56, 189, 248, 0.08);
-            overflow: hidden;
-            transition: transform 0.3s ease, border-color 0.3s ease;
-        }
-
-        .terminal-window:hover {
-            border-color: rgba(56, 189, 248, 0.5);
-        }
-
-        /* هدر ترمینال */
-        .terminal-header {
-            background: rgba(15, 23, 42, 0.9);
-            padding: 12px 18px;
+            border-bottom: 1px solid var(--border-subtle);
+            padding: 10px 24px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .brand-cluster {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .brand-logo {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            background: rgba(var(--accent-primary-rgb), 0.12);
+            border: 1px solid rgba(var(--accent-primary-rgb), 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-mono);
+            font-weight: 700;
+            color: var(--accent-primary);
+            box-shadow: var(--glow-primary);
+            position: relative;
+        }
+
+        .brand-logo::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            right: -3px;
+            width: 9px;
+            height: 9px;
+            background: var(--accent-success);
+            border-radius: 50%;
+            border: 2px solid var(--bg-void);
+        }
+
+        .brand-titles {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .brand-name {
+            font-family: var(--font-mono);
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
             direction: ltr;
         }
 
-        .window-controls {
-            display: flex;
-            gap: 8px;
+        .brand-badge {
+            font-size: 0.68rem;
+            background: rgba(var(--accent-primary-rgb), 0.15);
+            color: var(--accent-primary);
+            padding: 1px 7px;
+            border-radius: 4px;
+            border: 1px solid rgba(var(--accent-primary-rgb), 0.3);
         }
 
-        .dot {
-            width: 12px;
-            height: 12px;
+        .brand-sub {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .nav-tabs {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 4px;
+            border-radius: 10px;
+            border: 1px solid var(--border-subtle);
+            overflow-x: auto;
+        }
+
+        .nav-tab {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-family: var(--font-fa);
+            font-size: 0.85rem;
+            font-weight: 500;
+            padding: 7px 14px;
+            border-radius: 7px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            transition: var(--transition-fast);
+            white-space: nowrap;
+        }
+
+        .nav-tab:hover {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-tab.active {
+            background: rgba(var(--accent-primary-rgb), 0.16);
+            color: var(--accent-primary);
+            border: 1px solid rgba(var(--accent-primary-rgb), 0.35);
+            box-shadow: var(--glow-primary);
+        }
+
+        .telemetry-cluster {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-family: var(--font-mono);
+            font-size: 0.78rem;
+            direction: ltr;
+        }
+
+        .telemetry-pill {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-subtle);
+            padding: 5px 10px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--text-secondary);
+        }
+
+        .telemetry-pill strong {
+            color: var(--accent-primary);
+        }
+
+        .icon-btn {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-secondary);
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition-fast);
+            font-size: 0.95rem;
+        }
+
+        .icon-btn:hover, .icon-btn.active {
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
+            background: rgba(var(--accent-primary-rgb), 0.12);
+        }
+
+        /* ==========================================================================
+           6. MAIN WORKSPACE CONTAINER & GRID SYSTEM
+           ========================================================================== */
+        .workspace-wrapper {
+            position: relative;
+            z-index: 10;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 28px 20px 80px;
+        }
+
+        .tab-panel {
+            display: none;
+            animation: fadeInPanel 0.3s ease forwards;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        @keyframes fadeInPanel {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 20px;
+        }
+
+        .col-12 { grid-column: span 12; }
+        .col-8 { grid-column: span 8; }
+        .col-7 { grid-column: span 7; }
+        .col-6 { grid-column: span 6; }
+        .col-5 { grid-column: span 5; }
+        .col-4 { grid-column: span 4; }
+
+        @media (max-width: 1024px) {
+            .col-8, .col-7, .col-6, .col-5, .col-4 {
+                grid-column: span 12;
+            }
+        }
+
+        /* ==========================================================================
+           7. GLASS PANEL / WINDOW COMPONENT
+           ========================================================================== */
+        .cyber-card {
+            background: var(--bg-panel);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.6);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: border-color var(--transition-smooth), box-shadow var(--transition-smooth);
+            position: relative;
+        }
+
+        .cyber-card:hover {
+            border-color: rgba(var(--accent-primary-rgb), 0.35);
+            box-shadow: 0 20px 45px -12px rgba(0, 0, 0, 0.75), var(--glow-primary);
+        }
+
+        .window-bar {
+            background: rgba(9, 13, 22, 0.85);
+            padding: 11px 18px;
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            direction: ltr;
+            user-select: none;
+        }
+
+        .win-dots {
+            display: flex;
+            gap: 7px;
+        }
+
+        .win-dot {
+            width: 11px;
+            height: 11px;
             border-radius: 50%;
             display: inline-block;
         }
 
-        .dot.close { background: #ff5f56; }
-        .dot.minimize { background: #ffbd2e; }
-        .dot.maximize { background: #27c93f; }
+        .win-dot.red { background: #ff5f56; }
+        .win-dot.yellow { background: #ffbd2e; }
+        .win-dot.green { background: #27c93f; }
 
-        .terminal-title {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.85rem;
+        .win-title {
+            font-family: var(--font-mono);
+            font-size: 0.78rem;
             color: var(--text-muted);
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
         }
 
-        .status-badge {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.75rem;
-            color: var(--accent-green);
-            background: rgba(74, 222, 128, 0.1);
-            padding: 3px 10px;
-            border-radius: 99px;
-            border: 1px solid rgba(74, 222, 128, 0.25);
+        .win-actions {
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
         }
 
-        .status-dot {
+        .badge-live {
+            color: var(--accent-success);
+            background: rgba(74, 222, 128, 0.1);
+            border: 1px solid rgba(74, 222, 128, 0.3);
+            padding: 2px 8px;
+            border-radius: 99px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .badge-live::before {
+            content: '';
             width: 6px;
             height: 6px;
-            background: var(--accent-green);
             border-radius: 50%;
-            box-shadow: 0 0 8px var(--accent-green);
-            animation: pulse 2s infinite;
+            background: var(--accent-success);
+            box-shadow: 0 0 8px var(--accent-success);
+            animation: pulseGlow 1.8s infinite;
         }
 
-        @keyframes pulse {
+        @keyframes pulseGlow {
             0%, 100% { opacity: 1; }
-            50% { opacity: 0.4; }
+            50% { opacity: 0.35; }
         }
 
-        /* بدنه اصلی */
-        .terminal-body {
-            padding: 32px;
+        .card-body {
+            padding: 26px;
+            flex: 1;
         }
 
-        .hero-title {
-            font-family: 'Lalezar', cursive;
-            font-size: 2.6rem;
+        /* ==========================================================================
+           8. HERO PROFILE SECTION (ORIGINAL CARD UPGRADED)
+           ========================================================================== */
+        .hero-banner {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .hero-top-row {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .avatar-box {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .cyber-avatar {
+            width: 78px;
+            height: 78px;
+            border-radius: 18px;
+            background: linear-gradient(135deg, rgba(var(--accent-primary-rgb), 0.25), rgba(var(--accent-secondary-rgb), 0.25));
+            border: 2px solid var(--accent-primary);
+            box-shadow: var(--glow-strong);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.2rem;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .cyber-avatar-ring {
+            position: absolute;
+            inset: -6px;
+            border: 1px dashed rgba(var(--accent-primary-rgb), 0.5);
+            border-radius: 22px;
+            animation: spinSlow 18s linear infinite;
+        }
+
+        @keyframes spinSlow {
+            to { transform: rotate(360deg); }
+        }
+
+        .hero-heading h1 {
+            font-family: var(--font-display);
+            font-size: 2.5rem;
             font-weight: normal;
-            margin-bottom: 8px;
-            background: linear-gradient(90deg, #fff, var(--accent-cyan), var(--accent-purple));
+            line-height: 1.2;
+            background: linear-gradient(90deg, #ffffff, var(--accent-primary), var(--accent-secondary));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            margin-bottom: 6px;
+        }
+
+        .hero-subtitle {
+            color: var(--text-secondary);
+            font-size: 0.98rem;
+        }
+
+        .hero-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .cyber-tag {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            padding: 4px 10px;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-secondary);
+            direction: ltr;
+        }
+
+        .cyber-tag.highlight {
+            background: rgba(var(--accent-primary-rgb), 0.12);
+            border-color: rgba(var(--accent-primary-rgb), 0.35);
+            color: var(--accent-primary);
+        }
+
+        .typewriter-banner {
+            background: rgba(6, 9, 17, 0.85);
+            border: 1px solid var(--border-subtle);
+            border-right: 4px solid var(--accent-primary);
+            border-radius: 10px;
+            padding: 14px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .typewriter-wrap {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .prompt-arrow {
+            font-family: var(--font-mono);
+            color: var(--accent-primary);
+            font-weight: 700;
+        }
+
+        .cursor-blink {
+            display: inline-block;
+            width: 9px;
+            height: 18px;
+            background: var(--accent-primary);
+            vertical-align: middle;
+            animation: blinkCursor 0.9s step-end infinite;
+        }
+
+        @keyframes blinkCursor {
+            50% { opacity: 0; }
+        }
+
+        .hero-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+
+        @media (max-width: 640px) {
+            .hero-stats-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        .stat-box {
+            background: rgba(255, 255, 255, 0.025);
+            border: 1px solid var(--border-subtle);
+            border-radius: 10px;
+            padding: 14px;
+            text-align: center;
+            transition: var(--transition-fast);
+        }
+
+        .stat-box:hover {
+            border-color: rgba(var(--accent-primary-rgb), 0.4);
+            background: rgba(var(--accent-primary-rgb), 0.05);
+            transform: translateY(-2px);
+        }
+
+        .stat-value {
+            font-family: var(--font-mono);
+            font-size: 1.45rem;
+            font-weight: 700;
+            color: var(--accent-primary);
+            direction: ltr;
+        }
+
+        .stat-label {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .hero-footer-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 18px;
+            border-top: 1px solid var(--border-subtle);
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .sa-signature {
+            font-size: 0.92rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .sa-badge {
+            font-family: var(--font-mono);
+            font-weight: 700;
+            color: #090d16;
+            background: var(--accent-primary);
+            padding: 2px 10px;
+            border-radius: 6px;
+            box-shadow: var(--glow-primary);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .cyber-btn {
+            font-family: var(--font-fa);
+            font-size: 0.85rem;
+            font-weight: 600;
+            padding: 9px 18px;
+            border-radius: 8px;
+            border: 1px solid var(--border-subtle);
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition-fast);
+        }
+
+        .cyber-btn:hover {
+            border-color: var(--accent-primary);
+            background: rgba(var(--accent-primary-rgb), 0.15);
+            transform: translateY(-2px);
+        }
+
+        .cyber-btn.primary {
+            background: var(--accent-primary);
+            color: #050811;
+            border-color: var(--accent-primary);
+            box-shadow: var(--glow-primary);
+        }
+
+        .cyber-btn.primary:hover {
+            filter: brightness(1.1);
+            box-shadow: var(--glow-strong);
+        }
+
+        /* ==========================================================================
+           9. MULTI-TAB CODE IDE & EDITOR
+           ========================================================================== */
+        .ide-container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .ide-tabs {
+            display: flex;
+            background: #060911;
+            border-bottom: 1px solid var(--border-subtle);
+            overflow-x: auto;
+            direction: ltr;
+        }
+
+        .ide-tab {
+            padding: 10px 16px;
+            font-family: var(--font-mono);
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            background: transparent;
+            border: none;
+            border-right: 1px solid var(--border-subtle);
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+            transition: var(--transition-fast);
+        }
+
+        .ide-tab:hover {
+            color: var(--text-secondary);
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .ide-tab.active {
+            color: var(--accent-primary);
+            background: rgba(var(--accent-primary-rgb), 0.08);
+            border-bottom-color: var(--accent-primary);
+        }
+
+        .ide-editor-body {
+            background: var(--bg-code);
+            padding: 18px 0;
+            font-family: var(--font-mono);
+            font-size: 0.84rem;
+            line-height: 1.75;
+            direction: ltr;
+            text-align: left;
+            overflow-x: auto;
+            flex: 1;
+            min-height: 290px;
+        }
+
+        .code-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .code-line-row:hover {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .line-num {
+            width: 48px;
+            text-align: right;
+            padding-right: 16px;
+            color: #334155;
+            user-select: none;
+            font-size: 0.76rem;
+        }
+
+        .line-code {
+            padding-right: 20px;
+            white-space: pre;
+            color: #e2e8f0;
+        }
+
+        .ide-status-bar {
+            background: rgba(9, 13, 22, 0.95);
+            border-top: 1px solid var(--border-subtle);
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-family: var(--font-mono);
+            font-size: 0.74rem;
+            color: var(--text-muted);
+            direction: ltr;
+        }
+
+        .ide-output-drawer {
+            background: #04070e;
+            border-top: 1px solid rgba(var(--accent-primary-rgb), 0.3);
+            padding: 12px 18px;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: var(--accent-success);
+            direction: ltr;
+            display: none;
+        }
+
+        .ide-output-drawer.open {
+            display: block;
+        }
+
+        /* Syntax Highlighting Colors */
+        .syn-kw { color: #ff7b72; font-weight: 600; }
+        .syn-fn { color: #d2a8ff; }
+        .syn-str { color: #a5d6ff; }
+        .syn-num { color: #79c0ff; }
+        .syn-bool { color: #56d364; }
+        .syn-cmt { color: #64748b; font-style: italic; }
+        .syn-prop { color: #ffa657; }
+
+        /* ==========================================================================
+           10. INTERACTIVE LINUX / ZSH TERMINAL EMULATOR
+           ========================================================================== */
+        .terminal-emulator {
+            background: #050811;
+            padding: 18px;
+            font-family: var(--font-mono);
+            font-size: 0.84rem;
+            line-height: 1.65;
+            direction: ltr;
+            text-align: left;
+            height: 400px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            cursor: text;
+        }
+
+        .term-line {
+            word-break: break-word;
+        }
+
+        .term-prompt {
+            color: var(--accent-success);
+            font-weight: 700;
+            margin-right: 8px;
+        }
+
+        .term-path {
+            color: var(--accent-primary);
+            font-weight: 700;
+            margin-right: 8px;
+        }
+
+        .term-input-row {
+            display: flex;
+            align-items: center;
+            margin-top: 4px;
+        }
+
+        .term-cmd-input {
+            background: transparent;
+            border: none;
+            outline: none;
+            color: var(--text-primary);
+            font-family: var(--font-mono);
+            font-size: 0.84rem;
+            flex: 1;
+            caret-color: var(--accent-primary);
+        }
+
+        .term-quick-bar {
+            background: rgba(15, 23, 42, 0.8);
+            border-top: 1px solid var(--border-subtle);
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            direction: ltr;
+        }
+
+        .term-chip {
+            font-family: var(--font-mono);
+            font-size: 0.74rem;
+            padding: 4px 10px;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+
+        .term-chip:hover {
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
+            background: rgba(var(--accent-primary-rgb), 0.12);
+        }
+
+        /* ==========================================================================
+           11. CRYPTOGRAPHY & ENCODING LAB
+           ========================================================================== */
+        .toolkit-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        @media (max-width: 768px) {
+            .toolkit-grid { grid-template-columns: 1fr; }
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cyber-input, .cyber-textarea, .cyber-select {
+            width: 100%;
+            background: rgba(6, 9, 17, 0.85);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            padding: 11px 14px;
+            color: var(--text-primary);
+            font-family: var(--font-mono);
+            font-size: 0.84rem;
+            outline: none;
+            transition: var(--transition-fast);
+            direction: ltr;
+            text-align: left;
+        }
+
+        .cyber-textarea {
+            min-height: 95px;
+            resize: vertical;
+        }
+
+        .cyber-input:focus, .cyber-textarea:focus, .cyber-select:focus {
+            border-color: var(--accent-primary);
+            box-shadow: var(--glow-primary);
+        }
+
+        .hash-result-box {
+            background: rgba(6, 9, 17, 0.9);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-family: var(--font-mono);
+            font-size: 0.78rem;
+            color: var(--accent-primary);
+            word-break: break-all;
+            direction: ltr;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .copy-mini-btn {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-secondary);
+            padding: 4px 8px;
+            border-radius: 5px;
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .copy-mini-btn:hover {
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
+        }
+
+        /* ==========================================================================
+           12. SKILLS, PROJECTS & TELEMETRY MONITORS
+           ========================================================================== */
+        .skill-item {
+            margin-bottom: 16px;
+        }
+
+        .skill-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.88rem;
+            margin-bottom: 6px;
+        }
+
+        .skill-name {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .skill-pct {
+            font-family: var(--font-mono);
+            color: var(--accent-primary);
+        }
+
+        .skill-track {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 99px;
+            overflow: hidden;
+        }
+
+        .skill-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+            border-radius: 99px;
+            box-shadow: var(--glow-primary);
+            transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .project-card {
+            background: rgba(255, 255, 255, 0.025);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 14px;
+            transition: var(--transition-fast);
+        }
+
+        .project-card:hover {
+            border-color: rgba(var(--accent-primary-rgb), 0.45);
+            transform: translateY(-3px);
+            background: rgba(var(--accent-primary-rgb), 0.04);
+        }
+
+        .project-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .project-title {
+            font-family: var(--font-mono);
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--accent-primary);
+            direction: ltr;
+        }
+
+        .project-status {
+            font-size: 0.72rem;
+            padding: 2px 8px;
+            border-radius: 99px;
+            background: rgba(74, 222, 128, 0.12);
+            color: var(--accent-success);
+            border: 1px solid rgba(74, 222, 128, 0.3);
+        }
+
+        .project-desc {
+            font-size: 0.88rem;
+            color: var(--text-secondary);
+        }
+
+        .project-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-family: var(--font-mono);
+            font-size: 0.76rem;
+            color: var(--text-muted);
+            direction: ltr;
+            border-top: 1px solid var(--border-subtle);
+            padding-top: 12px;
+        }
+
+        /* Telemetry Graph Canvas */
+        #telemetry-canvas {
+            width: 100%;
+            height: 150px;
+            background: rgba(5, 8, 17, 0.75);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            display: block;
+        }
+
+        .network-log-box {
+            background: #050811;
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            padding: 12px;
+            height: 185px;
+            overflow-y: auto;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            direction: ltr;
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        /* ==========================================================================
+           13. COMMAND PALETTE MODAL (CTRL + K)
+           ========================================================================== */
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(3, 5, 10, 0.8);
+            backdrop-filter: blur(8px);
+            z-index: 5000;
+            display: none;
+            align-items: flex-start;
+            justify-content: center;
+            padding-top: 12vh;
+        }
+
+        .modal-backdrop.open {
+            display: flex;
+        }
+
+        .cmd-palette {
+            width: 92%;
+            max-width: 560px;
+            background: var(--bg-panel-solid);
+            border: 1px solid var(--border-focus);
+            border-radius: 14px;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85), var(--glow-strong);
+            overflow: hidden;
+        }
+
+        .cmd-search-bar {
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--border-subtle);
             display: flex;
             align-items: center;
             gap: 12px;
         }
 
-        .subtitle {
-            color: var(--text-muted);
-            font-size: 1.05rem;
-            line-height: 1.7;
-            margin-bottom: 24px;
-        }
-
-        /* باکس کد برنامه نویسی */
-        .code-block {
-            background: rgba(9, 13, 22, 0.85);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 12px;
-            padding: 18px 20px;
-            margin-bottom: 24px;
-            direction: ltr;
-            text-align: left;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.9rem;
-            line-height: 1.7;
-            position: relative;
-            overflow-x: auto;
-        }
-
-        .code-line {
-            display: block;
-        }
-
-        .c-keyword { color: #ff7b72; }
-        .c-prop { color: #79c0ff; }
-        .c-string { color: #a5d6ff; }
-        .c-bool { color: #56d364; }
-        .c-comment { color: #6e7681; font-style: italic; }
-
-        /* خط فرمان زنده */
-        .prompt-box {
-            background: rgba(56, 189, 248, 0.06);
-            border-right: 3px solid var(--accent-cyan);
-            padding: 12px 16px;
-            border-radius: 6px;
-            margin-bottom: 28px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .typing-text {
+        .cmd-search-input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: var(--text-primary);
+            font-family: var(--font-fa);
             font-size: 0.95rem;
-            color: #e2e8f0;
-            font-weight: 600;
         }
 
-        .cursor {
-            display: inline-block;
-            width: 8px;
-            height: 16px;
-            background: var(--accent-cyan);
-            vertical-align: middle;
-            margin-right: 4px;
-            animation: blink 1s step-end infinite;
+        .cmd-list {
+            max-height: 320px;
+            overflow-y: auto;
+            padding: 8px;
         }
 
-        @keyframes blink {
-            50% { opacity: 0; }
-        }
-
-        /* فوتر و دکمه‌ها */
-        .card-footer {
+        .cmd-item {
+            padding: 10px 14px;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding-top: 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.08);
-            flex-wrap: wrap;
-            gap: 14px;
+            cursor: pointer;
+            transition: var(--transition-fast);
+            font-size: 0.88rem;
+            color: var(--text-secondary);
         }
 
-        .author {
-            font-size: 0.9rem;
-            color: var(--text-muted);
+        .cmd-item:hover {
+            background: rgba(var(--accent-primary-rgb), 0.14);
+            color: var(--accent-primary);
         }
 
-        .author code {
-            font-family: 'JetBrains Mono', monospace;
-            color: var(--accent-cyan);
-            background: rgba(56, 189, 248, 0.12);
-            padding: 2px 8px;
-            border-radius: 6px;
-            font-weight: 600;
+        .cmd-shortcut {
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            background: rgba(255, 255, 255, 0.06);
+            padding: 2px 7px;
+            border-radius: 4px;
+            direction: ltr;
         }
 
-        .btn-github {
-            font-family: 'JetBrains Mono', 'Vazirmatn', sans-serif;
-            font-size: 0.85rem;
-            color: var(--text-main);
-            background: rgba(255, 255, 255, 0.07);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            padding: 8px 16px;
-            border-radius: 8px;
-            text-decoration: none;
-            display: inline-flex;
+        /* ==========================================================================
+           14. BOTTOM DOCK / STATUS FOOTER
+           ========================================================================== */
+        .bottom-status-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 90;
+            background: rgba(6, 9, 17, 0.92);
+            backdrop-filter: blur(12px);
+            border-top: 1px solid var(--border-subtle);
+            padding: 6px 20px;
+            display: flex;
             align-items: center;
+            justify-content: space-between;
+            font-family: var(--font-mono);
+            font-size: 0.74rem;
+            color: var(--text-muted);
+            direction: ltr;
+        }
+
+        .status-left, .status-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .theme-dots {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .theme-swatch {
+            width: 13px;
+            height: 13px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: transform 0.15s ease;
+        }
+
+        .theme-swatch:hover {
+            transform: scale(1.25);
+        }
+
+        .theme-swatch.active {
+            border-color: #fff;
+        }
+
+        /* Toast Notification */
+        #toast-container {
+            position: fixed;
+            bottom: 45px;
+            left: 24px;
+            z-index: 9000;
+            display: flex;
+            flex-direction: column;
             gap: 8px;
-            transition: all 0.2s ease;
         }
 
-        .btn-github:hover {
-            background: var(--accent-cyan);
-            color: #090d16;
-            border-color: var(--accent-cyan);
-            font-weight: 600;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(56, 189, 248, 0.3);
+        .cyber-toast {
+            background: rgba(15, 23, 42, 0.95);
+            border: 1px solid var(--accent-primary);
+            border-right: 4px solid var(--accent-primary);
+            color: var(--text-primary);
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 0.84rem;
+            box-shadow: var(--glow-primary);
+            animation: slideInToast 0.25s ease forwards;
         }
 
-        @media (max-width: 500px) {
-            .terminal-body { padding: 22px; }
-            .hero-title { font-size: 2rem; }
-            .code-block { font-size: 0.8rem; }
+        @keyframes slideInToast {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
         }
     </style>
 </head>
 <body>
 
-    <div class="terminal-window">
-        <!-- نوار بالای پنجره به سبک ترمینال لینوکس/مک -->
-        <div class="terminal-header">
-            <div class="window-controls">
-                <span class="dot close"></span>
-                <span class="dot minimize"></span>
-                <span class="dot maximize"></span>
+    <!-- ==========================================================================
+         BACKGROUND CANVAS & OVERLAYS
+         ========================================================================== -->
+    <canvas id="bg-canvas"></canvas>
+    <div class="cyber-grid-overlay"></div>
+    <div class="scanlines" id="scanlines-layer"></div>
+
+    <!-- ==========================================================================
+         1. KERNEL BOOT SEQUENCE OVERLAY
+         ========================================================================== -->
+    <div id="boot-screen">
+        <div class="boot-header">
+            <span>AMIRZH0-KERNEL v4.8.2-sa-amd64 // UEFI SECURE BOOT</span>
+            <span id="boot-pct-text">0%</span>
+        </div>
+        <div class="boot-logs" id="boot-logs-container"></div>
+        <div class="boot-footer">
+            <div class="boot-progress-wrap">
+                <div class="boot-progress-bar" id="boot-bar"></div>
             </div>
-            <div class="terminal-title">
-                <span>amirzh0@github-pages: ~/portfolio</span>
-            </div>
-            <div class="status-badge">
-                <span class="status-dot"></span>
-                ONLINE
+            <button class="btn-skip-boot" id="btn-skip-boot">SKIP BOOT [ESC]</button>
+        </div>
+    </div>
+
+    <!-- ==========================================================================
+         2. TOP TELEMETRY NAVBAR
+         ========================================================================== -->
+    <header class="top-navbar">
+        <div class="brand-cluster">
+            <div class="brand-logo">&gt;_</div>
+            <div class="brand-titles">
+                <div class="brand-name">
+                    <span>amirzh0.github.io</span>
+                    <span class="brand-badge">v4.8 PRO</span>
+                </div>
+                <div class="brand-sub">ساخته شده با ❤️ و معماری مهندسی توسط <strong>sa</strong></div>
             </div>
         </div>
 
-        <!-- محتوای داخل پنجره -->
-        <div class="terminal-body">
-            <h1 class="hero-title">🚀 فضای کاربری من در گیت‌هاب</h1>
-            <p class="subtitle">
-                این پروژه روی زیرساخت ابری <strong>GitHub Pages</strong> مستقر شده و به‌صورت متن‌باز در حال توسعه است.
-            </p>
+        <nav class="nav-tabs" role="tablist">
+            <button class="nav-tab active" data-target="tab-overview">🚀 داشبورد اصلی</button>
+            <button class="nav-tab" data-target="tab-terminal">💻 ترمینال لینوکس</button>
+            <button class="nav-tab" data-target="tab-crypto">🔐 جعبه ابزار رمزنگاری</button>
+            <button class="nav-tab" data-target="tab-projects">📂 پروژه‌ها و رادار</button>
+        </nav>
 
-            <!-- بخش نمایش کد به سبک IDE -->
-            <div class="code-block">
-                <span class="code-line"><span class="c-comment">// Project configuration &amp; status</span></span>
-                <span class="code-line"><span class="c-keyword">const</span> <span class="c-prop">developer</span> = {</span>
-                <span class="code-line">&nbsp;&nbsp;handle: <span class="c-string">"@amirzh0"</span>,</span>
-                <span class="code-line">&nbsp;&nbsp;maintainedBy: <span class="c-string">"sa"</span>,</span>
-                <span class="code-line">&nbsp;&nbsp;host: <span class="c-string">"GitHub Pages"</span>,</span>
-                <span class="code-line">&nbsp;&nbsp;buildingCoolStuff: <span class="c-bool">true</span></span>
-                <span class="code-line">};</span>
+        <div class="telemetry-cluster">
+            <div class="telemetry-pill" title="زمان کارکرد نشست">
+                <span>UPTIME:</span>
+                <strong id="nav-uptime">00:00:00</strong>
             </div>
+            <div class="telemetry-pill" title="ساعت محلی">
+                <strong id="nav-clock">--:--:--</strong>
+            </div>
+            <button class="icon-btn active" id="btn-toggle-sound" title="افکت صوتی کیبورد و رابط کاربری">🔊</button>
+            <button class="icon-btn active" id="btn-toggle-crt" title="افکت مانیتور کلاسیک (Scanlines)">📺</button>
+            <button class="icon-btn" id="btn-open-palette" title="پالت دستورات سریع (Ctrl+K)">⌘</button>
+        </div>
+    </header>
 
-            <!-- باکس وضعیت با افکت تایپ زنده -->
-            <div class="prompt-box">
-                <div>
-                    <span class="typing-text" id="typewriter"></span>
-                    <span class="cursor"></span>
+    <!-- ==========================================================================
+         3. MAIN WORKSPACE
+         ========================================================================== -->
+    <main class="workspace-wrapper">
+
+        <!-- ======================================================================
+             TAB 1: OVERVIEW DASHBOARD (HERO + IDE + LIVE TELEMETRY)
+             ====================================================================== -->
+        <section class="tab-panel active" id="tab-overview">
+            <div class="bento-grid">
+
+                <!-- Hero Card (Upgraded Original Card) -->
+                <div class="cyber-card col-7">
+                    <div class="window-bar">
+                        <div class="win-dots">
+                            <span class="win-dot red"></span>
+                            <span class="win-dot yellow"></span>
+                            <span class="win-dot green"></span>
+                        </div>
+                        <div class="win-title">amirzh0@github-pages: ~/mission-control</div>
+                        <div class="win-actions">
+                            <span class="badge-live">DEPLOYED ON GITHUB</span>
+                        </div>
+                    </div>
+                    <div class="card-body hero-banner">
+                        <div class="hero-top-row">
+                            <div class="avatar-box">
+                                <div class="cyber-avatar">
+                                    <div class="cyber-avatar-ring"></div>
+                                    <span>🚀</span>
+                                </div>
+                                <div class="hero-heading">
+                                    <h1>سایت من روی گیت‌هاب — amirzh0</h1>
+                                    <p class="hero-subtitle">
+                                        این پلتفرم با <strong>GitHub Pages</strong> میزبانی شده و به یک محیط کاری تعاملی برای برنامه‌نویسی، امنیت و ابزارهای وب مجهز شده است.
+                                    </p>
+                                    <div class="hero-tags">
+                                        <span class="cyber-tag highlight">#GitHub_Pages</span>
+                                        <span class="cyber-tag">#FullStack_Dev</span>
+                                        <span class="cyber-tag">#CyberSecurity</span>
+                                        <span class="cyber-tag">#OpenSource</span>
+                                        <span class="cyber-tag highlight">Built by: sa</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Live Typewriter Prompt -->
+                        <div class="typewriter-banner">
+                            <div class="typewriter-wrap">
+                                <span class="prompt-arrow">❯</span>
+                                <span id="hero-typewriter">✨ به زودی محتوای جذاب...</span>
+                                <span class="cursor-blink"></span>
+                            </div>
+                            <span style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-muted); direction: ltr;">[STATUS: 200 OK]</span>
+                        </div>
+
+                        <!-- Quick Metrics -->
+                        <div class="hero-stats-grid">
+                            <div class="stat-box">
+                                <div class="stat-value">100%</div>
+                                <div class="stat-label">آپتایم گیت‌هاب</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-value" id="stat-loc">1,650+</div>
+                                <div class="stat-label">خط کد خالص</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-value">0 ms</div>
+                                <div class="stat-label">وابستگی خارجی</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-value">TLS 1.3</div>
+                                <div class="stat-label">پروتکل امنیتی</div>
+                            </div>
+                        </div>
+
+                        <div class="hero-footer-bar">
+                            <div class="sa-signature">
+                                <span>ساخته شده با ❤️ و کدنویسی مهندسی توسط</span>
+                                <span class="sa-badge">sa</span>
+                            </div>
+                            <div class="btn-group">
+                                <button class="cyber-btn primary" onclick="switchTab('tab-terminal')">
+                                    <span>اجرای ترمینال</span>
+                                    <span>⚡</span>
+                                </button>
+                                <button class="cyber-btn" onclick="switchTab('tab-crypto')">
+                                    <span>ابزار رمزنگاری</span>
+                                    <span>🔐</span>
+                                </button>
+                                <a href="https://github.com/amirzh0" target="_blank" rel="noopener" class="cyber-btn">
+                                    <span>پروفایل گیت‌هاب</span>
+                                    <span>↗</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Multi-File Interactive Code IDE -->
+                <div class="cyber-card col-5">
+                    <div class="window-bar">
+                        <div class="win-dots">
+                            <span class="win-dot red"></span>
+                            <span class="win-dot yellow"></span>
+                            <span class="win-dot green"></span>
+                        </div>
+                        <div class="win-title">nvim // workspace-ide</div>
+                        <div class="win-actions">
+                            <button class="copy-mini-btn" id="btn-run-code" style="color: var(--accent-success); border-color: rgba(74,222,128,0.4);">▶ RUN CODE</button>
+                            <button class="copy-mini-btn" id="btn-copy-ide">COPY</button>
+                        </div>
+                    </div>
+
+                    <div class="ide-container">
+                        <div class="ide-tabs">
+                            <button class="ide-tab active" data-file="profile.js">📄 profile.js</button>
+                            <button class="ide-tab" data-file="security.py">🐍 security.py</button>
+                            <button class="ide-tab" data-file="deploy.sh">🐚 deploy.sh</button>
+                            <button class="ide-tab" data-file="manifest.json">⚙️ manifest.json</button>
+                        </div>
+
+                        <div class="ide-editor-body" id="ide-code-view"></div>
+
+                        <div class="ide-output-drawer" id="ide-output-drawer"></div>
+
+                        <div class="ide-status-bar">
+                            <span>NORMAL MODE | UTF-8</span>
+                            <span id="ide-lang-indicator">JavaScript (ES2026)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Skills & Tech Stack Matrix -->
+                <div class="cyber-card col-6">
+                    <div class="window-bar">
+                        <div class="win-dots">
+                            <span class="win-dot red"></span>
+                            <span class="win-dot yellow"></span>
+                            <span class="win-dot green"></span>
+                        </div>
+                        <div class="win-title">stack-analyzer // capabilities.sys</div>
+                        <div class="win-actions"><span>VERIFIED</span></div>
+                    </div>
+                    <div class="card-body">
+                        <h3 style="margin-bottom: 18px; font-size: 1.1rem; color: var(--accent-primary);">⚡ استک فنی و مهارت‌های توسعه</h3>
+
+                        <div class="skill-item">
+                            <div class="skill-header">
+                                <span class="skill-name">Frontend Architecture (HTML5, CSS3, Modern JS)</span>
+                                <span class="skill-pct">96%</span>
+                            </div>
+                            <div class="skill-track"><div class="skill-fill" style="width: 96%;"></div></div>
+                        </div>
+
+                        <div class="skill-item">
+                            <div class="skill-header">
+                                <span class="skill-name">Python Scripting &amp; Automation Bots</span>
+                                <span class="skill-pct">92%</span>
+                            </div>
+                            <div class="skill-track"><div class="skill-fill" style="width: 92%;"></div></div>
+                        </div>
+
+                        <div class="skill-item">
+                            <div class="skill-header">
+                                <span class="skill-name">Web Application Security &amp; API Auditing</span>
+                                <span class="skill-pct">89%</span>
+                            </div>
+                            <div class="skill-track"><div class="skill-fill" style="width: 89%;"></div></div>
+                        </div>
+
+                        <div class="skill-item" style="margin-bottom: 0;">
+                            <div class="skill-header">
+                                <span class="skill-name">Linux Server Administration &amp; Git Workflow</span>
+                                <span class="skill-pct">94%</span>
+                            </div>
+                            <div class="skill-track"><div class="skill-fill" style="width: 94%;"></div></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Live System Resource Telemetry -->
+                <div class="cyber-card col-6">
+                    <div class="window-bar">
+                        <div class="win-dots">
+                            <span class="win-dot red"></span>
+                            <span class="win-dot yellow"></span>
+                            <span class="win-dot green"></span>
+                        </div>
+                        <div class="win-title">htop // real-time-telemetry</div>
+                        <div class="win-actions">
+                            <span id="cpu-load-badge" style="color: var(--accent-primary);">CPU: 14% | RAM: 38%</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                            <h3 style="font-size: 1.05rem; color: var(--accent-primary);">📈 مانیتورینگ زنده هسته و ترافیک</h3>
+                            <span style="font-family:var(--font-mono); font-size:0.75rem; color:var(--text-muted); direction:ltr;">60 FPS CANVAS STREAM</span>
+                        </div>
+                        <canvas id="telemetry-canvas" width="600" height="150"></canvas>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ======================================================================
+             TAB 2: INTERACTIVE ZSH TERMINAL EMULATOR
+             ====================================================================== -->
+        <section class="tab-panel" id="tab-terminal">
+            <div class="cyber-card">
+                <div class="window-bar">
+                    <div class="win-dots">
+                        <span class="win-dot red"></span>
+                        <span class="win-dot yellow"></span>
+                        <span class="win-dot green"></span>
+                    </div>
+                    <div class="win-title">zsh // amirzh0@cyber-node: ~ (Interactive Shell)</div>
+                    <div class="win-actions">
+                        <button class="copy-mini-btn" onclick="executeTerminalCommand('clear')">CLEAR</button>
+                        <button class="copy-mini-btn" onclick="executeTerminalCommand('neofetch')">NEOFETCH</button>
+                    </div>
+                </div>
+
+                <div class="terminal-emulator" id="terminal-screen" onclick="document.getElementById('terminal-input').focus()">
+                    <div id="terminal-history"></div>
+                    <div class="term-input-row">
+                        <span class="term-prompt">amirzh0@github</span>
+                        <span class="term-path">~/sa-workstation ❯</span>
+                        <input type="text" class="term-cmd-input" id="terminal-input" autocomplete="off" spellcheck="false" placeholder="Type 'help' or click a command below...">
+                    </div>
+                </div>
+
+                <div class="term-quick-bar">
+                    <span style="font-size: 0.75rem; color: var(--text-muted); margin-right: 6px;">Quick Commands:</span>
+                    <button class="term-chip" onclick="executeTerminalCommand('help')">help</button>
+                    <button class="term-chip" onclick="executeTerminalCommand('whoami')">whoami</button>
+                    <button class="term-chip" onclick="executeTerminalCommand('neofetch')">neofetch</button>
+                    <button class="term-chip" onclick="executeTerminalCommand('ls -la')">ls -la</button>
+                    <button class="term-chip" onclick="executeTerminalCommand('cat about.txt')">cat about.txt</button>
+                    <button class="term-chip" onclick="executeTerminalCommand('scan --ports')">scan --ports</button>
+                    <button class="term-chip" onclick="executeTerminalCommand('matrix')">matrix</button>
+                    <button class="term-chip" onclick="executeTerminalCommand('clear')">clear</button>
                 </div>
             </div>
+        </section>
 
-            <!-- فوتر کارت -->
-            <div class="card-footer">
-                <div class="author">
-                    کامپایل شده با ❤️ و ☕ توسط <code>sa</code>
+        <!-- ======================================================================
+             TAB 3: CRYPTOGRAPHY, HASHING & ENCODING LAB
+             ====================================================================== -->
+        <section class="tab-panel" id="tab-crypto">
+            <div class="bento-grid">
+
+                <!-- Encoder / Decoder & Real SHA Hashing -->
+                <div class="cyber-card col-7">
+                    <div class="window-bar">
+                        <div class="win-dots">
+                            <span class="win-dot red"></span>
+                            <span class="win-dot yellow"></span>
+                            <span class="win-dot green"></span>
+                        </div>
+                        <div class="win-title">crypto-engine // sha256-base64-hex</div>
+                        <div class="win-actions"><span class="badge-live">WEB CRYPTO API</span></div>
+                    </div>
+                    <div class="card-body">
+                        <h3 style="margin-bottom: 16px; color: var(--accent-primary);">🔐 آزمایشگاه رمزنگاری، هش و تبدیل داده</h3>
+
+                        <div class="form-group">
+                            <label class="form-label">
+                                <span>متن ورودی (Plaintext / Payload):</span>
+                                <span id="crypto-char-count" style="font-family: var(--font-mono); font-size: 0.75rem;">19 chars</span>
+                            </label>
+                            <textarea class="cyber-textarea" id="crypto-input" placeholder="متن یا رشته مورد نظر را وارد کنید...">amirzh0 built by sa</textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label"><span>SHA-256 Hash (Real-time Cryptographic Digest):</span></label>
+                            <div class="hash-result-box">
+                                <span id="out-sha256">Computing...</span>
+                                <button class="copy-mini-btn" onclick="copyTextById('out-sha256')">COPY</button>
+                            </div>
+                        </div>
+
+                        <div class="toolkit-grid">
+                            <div class="form-group">
+                                <label class="form-label"><span>Base64 Encoded:</span></label>
+                                <div class="hash-result-box">
+                                    <span id="out-base64">-</span>
+                                    <button class="copy-mini-btn" onclick="copyTextById('out-base64')">COPY</button>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label"><span>Hexadecimal (UTF-8):</span></label>
+                                <div class="hash-result-box">
+                                    <span id="out-hex">-</span>
+                                    <button class="copy-mini-btn" onclick="copyTextById('out-hex')">COPY</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label class="form-label"><span>Binary Stream (8-bit):</span></label>
+                            <div class="hash-result-box">
+                                <span id="out-binary" style="font-size: 0.72rem;">-</span>
+                                <button class="copy-mini-btn" onclick="copyTextById('out-binary')">COPY</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <a href="https://github.com/amirzh0" target="_blank" class="btn-github">
-                    <span>GitHub Profile</span>
-                    <span>→</span>
-                </a>
+
+                <!-- Secure Password Generator & Entropy Analyzer -->
+                <div class="cyber-card col-5">
+                    <div class="window-bar">
+                        <div class="win-dots">
+                            <span class="win-dot red"></span>
+                            <span class="win-dot yellow"></span>
+                            <span class="win-dot green"></span>
+                        </div>
+                        <div class="win-title">entropy-gen // keyforge.sec</div>
+                        <div class="win-actions"><span>CSPRNG</span></div>
+                    </div>
+                    <div class="card-body">
+                        <h3 style="margin-bottom: 16px; color: var(--accent-primary);">🔑 تولیدکننده کلید و پسورد امنیتی</h3>
+
+                        <div class="form-group">
+                            <label class="form-label">
+                                <span>طول کلید (Length):</span>
+                                <strong id="pass-len-label" style="font-family: var(--font-mono); color: var(--accent-primary);">24</strong>
+                            </label>
+                            <input type="range" id="pass-len-slider" min="8" max="64" value="24" style="width: 100%; accent-color: var(--accent-primary);">
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 18px; font-size: 0.85rem;">
+                            <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+                                <input type="checkbox" id="chk-upper" checked> حروف بزرگ (A-Z)
+                            </label>
+                            <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+                                <input type="checkbox" id="chk-lower" checked> حروف کوچک (a-z)
+                            </label>
+                            <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+                                <input type="checkbox" id="chk-num" checked> اعداد (0-9)
+                            </label>
+                            <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+                                <input type="checkbox" id="chk-sym" checked> کاراکتر ویژه (!@#$)
+                            </label>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">
+                                <span>کلید تولید شده:</span>
+                                <span id="pass-entropy-badge" style="font-family: var(--font-mono); font-size: 0.74rem; color: var(--accent-success);">ENTROPY: 142 bits</span>
+                            </label>
+                            <div class="hash-result-box" style="padding: 14px;">
+                                <span id="generated-pass-box" style="font-size: 0.92rem; font-weight: 700;">-</span>
+                                <button class="copy-mini-btn" onclick="copyTextById('generated-pass-box')">COPY</button>
+                            </div>
+                        </div>
+
+                        <button class="cyber-btn primary" style="width: 100%; justify-content: center; margin-top: 8px;" id="btn-regen-pass">
+                            <span>⚡ تولید کلید تصادفی جدید</span>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ======================================================================
+             TAB 4: PROJECTS REPOSITORY & NETWORK RADAR
+             ====================================================================== -->
+        <section class="tab-panel" id="tab-projects">
+            <div class="bento-grid">
+
+                <div class="cyber-card col-8">
+                    <div class="window-bar">
+                        <div class="win-dots">
+                            <span class="win-dot red"></span>
+                            <span class="win-dot yellow"></span>
+                            <span class="win-dot green"></span>
+                        </div>
+                        <div class="win-title">git-repos // amirzh0-deployments</div>
+                        <div class="win-actions"><span>4 ACTIVE MODULES</span></div>
+                    </div>
+                    <div class="card-body">
+                        <h3 style="margin-bottom: 18px; color: var(--accent-primary);">📂 پروژه‌ها و ماژول‌های در حال توسعه</h3>
+                        <div class="toolkit-grid">
+
+                            <div class="project-card">
+                                <div class="project-head">
+                                    <span class="project-title">amirzh0.github.io</span>
+                                    <span class="project-status">PRODUCTION</span>
+                                </div>
+                                <p class="project-desc">پورتفولیو و محیط کاری تعاملی تحت وب مجهز به شل لینوکس، ابزارهای رمزنگاری و رابط کاربری سایبرپانک.</p>
+                                <div class="project-meta">
+                                    <span>HTML5 / CSS3 / Vanilla JS</span>
+                                    <span>★ 128</span>
+                                </div>
+                            </div>
+
+                            <div class="project-card">
+                                <div class="project-head">
+                                    <span class="project-title">sa-sec-scanner</span>
+                                    <span class="project-status">ACTIVE</span>
+                                </div>
+                                <p class="project-desc">اسکریپت بررسی هدرهای امنیتی، کشف زیر دامنه و آنالیز پیکربندی سرورهای وب برای برنامه‌های باگ‌بانتی.</p>
+                                <div class="project-meta">
+                                    <span>Python 3.12 / AsyncIO</span>
+                                    <span>★ 94</span>
+                                </div>
+                            </div>
+
+                            <div class="project-card">
+                                <div class="project-head">
+                                    <span class="project-title">media-dl-core</span>
+                                    <span class="project-status">ONLINE</span>
+                                </div>
+                                <p class="project-desc">موتور پردازش و دانلود سریع رسانه با صف‌بندی غیرهمزمان و مدیریت نشست‌های کاربران روی ربات تلگرام.</p>
+                                <div class="project-meta">
+                                    <span>Python / Telegram API</span>
+                                    <span>★ 215</span>
+                                </div>
+                            </div>
+
+                            <div class="project-card">
+                                <div class="project-head">
+                                    <span class="project-title">idn-homograph-lab</span>
+                                    <span class="project-status">RESEARCH</span>
+                                </div>
+                                <p class="project-desc">آزمایشگاه تشخیص کاراکترهای مشابه یونی‌کد (Punycode) برای جلوگیری از حملات فیشینگ دامنه‌ها.</p>
+                                <div class="project-meta">
+                                    <span>JavaScript / Security</span>
+                                    <span>★ 76</span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Live Network & Request Inspector -->
+                <div class="cyber-card col-4">
+                    <div class="window-bar">
+                        <div class="win-dots">
+                            <span class="win-dot red"></span>
+                            <span class="win-dot yellow"></span>
+                            <span class="win-dot green"></span>
+                        </div>
+                        <div class="win-title">tcpdump // live-packet-stream</div>
+                        <div class="win-actions"><span class="badge-live">LISTENING</span></div>
+                    </div>
+                    <div class="card-body">
+                        <h3 style="margin-bottom: 12px; font-size: 1rem; color: var(--accent-primary);">📡 لاگ زنده رویدادهای سیستم</h3>
+                        <div class="network-log-box" id="network-log-stream"></div>
+                        <button class="cyber-btn" style="width:100%; justify-content:center; margin-top:12px;" onclick="triggerSimulatedAudit()">
+                            <span>🔍 اجرای پینگ و تست امنیت نود</span>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ==========================================================================
+         4. COMMAND PALETTE MODAL (CTRL + K)
+         ========================================================================== -->
+    <div class="modal-backdrop" id="cmd-modal">
+        <div class="cmd-palette">
+            <div class="cmd-search-bar">
+                <span>🔍</span>
+                <input type="text" class="cmd-search-input" id="cmd-search-input" placeholder="جستجوی دستور، ابزار یا تغییر تم رنگی...">
+                <span class="cmd-shortcut">ESC</span>
+            </div>
+            <div class="cmd-list" id="cmd-list">
+                <div class="cmd-item" onclick="runPaletteAction('tab-overview')">
+                    <span>🚀 رفتن به داشبورد اصلی</span>
+                    <span class="cmd-shortcut">Tab 1</span>
+                </div>
+                <div class="cmd-item" onclick="runPaletteAction('tab-terminal')">
+                    <span>💻 باز کردن ترمینال لینوکس</span>
+                    <span class="cmd-shortcut">Tab 2</span>
+                </div>
+                <div class="cmd-item" onclick="runPaletteAction('tab-crypto')">
+                    <span>🔐 باز کردن آزمایشگاه رمزنگاری</span>
+                    <span class="cmd-shortcut">Tab 3</span>
+                </div>
+                <div class="cmd-item" onclick="runPaletteAction('tab-projects')">
+                    <span>📂 نمایش پروژه‌ها و رادار</span>
+                    <span class="cmd-shortcut">Tab 4</span>
+                </div>
+                <div class="cmd-item" onclick="runPaletteAction('theme-cyan')">
+                    <span>🎨 تم رنگی: Cyber Cyan (پیش‌فرض)</span>
+                    <span class="cmd-shortcut">Theme</span>
+                </div>
+                <div class="cmd-item" onclick="runPaletteAction('theme-matrix')">
+                    <span>🍏 تم رنگی: Matrix Hacker Green</span>
+                    <span class="cmd-shortcut">Theme</span>
+                </div>
+                <div class="cmd-item" onclick="runPaletteAction('theme-synthwave')">
+                    <span>🔮 تم رنگی: Synthwave Neon Purple</span>
+                    <span class="cmd-shortcut">Theme</span>
+                </div>
+                <div class="cmd-item" onclick="runPaletteAction('theme-crimson')">
+                    <span>🌹 تم رنگی: Red Team Crimson</span>
+                    <span class="cmd-shortcut">Theme</span>
+                </div>
+                <div class="cmd-item" onclick="runPaletteAction('theme-amber')">
+                    <span>⚡ تم رنگی: Golden Amber</span>
+                    <span class="cmd-shortcut">Theme</span>
+                </div>
             </div>
         </div>
     </div>
 
+    <!-- Toast Notifications -->
+    <div id="toast-container"></div>
+
+    <!-- ==========================================================================
+         5. BOTTOM STATUS BAR & THEME SWITCHER
+         ========================================================================== -->
+    <footer class="bottom-status-bar">
+        <div class="status-left">
+            <span style="color: var(--accent-success);">● READY</span>
+            <span>HOST: GitHub Pages</span>
+            <span>USER: amirzh0</span>
+            <span>ARCHITECT: sa</span>
+        </div>
+        <div class="status-right">
+            <span>THEME:</span>
+            <div class="theme-dots">
+                <span class="theme-swatch active" style="background:#38bdf8;" onclick="setTheme('cyan')" title="Cyber Cyan"></span>
+                <span class="theme-swatch" style="background:#22c55e;" onclick="setTheme('matrix')" title="Matrix Green"></span>
+                <span class="theme-swatch" style="background:#e879f9;" onclick="setTheme('synthwave')" title="Synthwave"></span>
+                <span class="theme-swatch" style="background:#fb7185;" onclick="setTheme('crimson')" title="Crimson Red"></span>
+                <span class="theme-swatch" style="background:#fbbf24;" onclick="setTheme('amber')" title="Amber Gold"></span>
+            </div>
+            <span>CTRL+K: Command Palette</span>
+        </div>
+    </footer>
+
+    <!-- ==========================================================================
+         6. CORE APPLICATION JAVASCRIPT ENGINE
+         ========================================================================== -->
     <script>
-        // افکت تایپ خودکار جملات
-        const messages = [
-            "✨ به زودی پروژه‌ها و ابزارهای جذاب اضافه می‌شوند...",
-            "⚡ در حال نوشتن کدهای تمیز و بهینه...",
-            "🔒 محیط تست و توسعه آماده به کار است."
-        ];
-        
-        let msgIndex = 0;
-        let charIndex = 0;
-        let isDeleting = false;
-        const target = document.getElementById("typewriter");
-
-        function typeEffect() {
-            const currentMsg = messages[msgIndex];
-            
-            if (isDeleting) {
-                target.textContent = currentMsg.substring(0, charIndex - 1);
-                charIndex--;
-            } else {
-                target.textContent = currentMsg.substring(0, charIndex + 1);
-                charIndex++;
+        /* ----------------------------------------------------------------------
+           A. WEB AUDIO API SYNTHESIZER (UI & KEYBOARD SOUND EFFECTS)
+           ---------------------------------------------------------------------- */
+        class CyberAudioEngine {
+            constructor() {
+                this.enabled = true;
+                this.ctx = null;
             }
 
-            let speed = isDeleting ? 35 : 70;
-
-            if (!isDeleting && charIndex === currentMsg.length) {
-                speed = 2200; // مکث بعد از کامل شدن جمله
-                isDeleting = true;
-            } else if (isDeleting && charIndex === 0) {
-                isDeleting = false;
-                msgIndex = (msgIndex + 1) % messages.length;
-                speed = 400;
+            init() {
+                if (!this.ctx) {
+                    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                    if (AudioCtx) this.ctx = new AudioCtx();
+                }
             }
 
-            setTimeout(typeEffect, speed);
+            playTick(freq = 680, duration = 0.025, type = 'sine') {
+                if (!this.enabled) return;
+                try {
+                    this.init();
+                    if (!this.ctx) return;
+                    const osc = this.ctx.createOscillator();
+                    const gain = this.ctx.createGain();
+                    osc.type = type;
+                    osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+                    gain.gain.setValueAtTime(0.035, this.ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + duration);
+                    osc.connect(gain);
+                    gain.connect(this.ctx.destination);
+                    osc.start();
+                    osc.stop(this.ctx.currentTime + duration);
+                } catch (e) {}
+            }
+
+            playSuccess() {
+                this.playTick(520, 0.06, 'triangle');
+                setTimeout(() => this.playTick(780, 0.09, 'triangle'), 65);
+            }
         }
 
-        document.addEventListener("DOMContentLoaded", typeEffect);
+        const sfx = new CyberAudioEngine();
+
+        /* ----------------------------------------------------------------------
+           B. KERNEL BOOT SEQUENCE SIMULATION
+           ---------------------------------------------------------------------- */
+        const bootMessages = [
+            { tag: "INFO", text: "Initializing AMIRZH0-KERNEL v4.8.2-sa-amd64..." },
+            { tag: "OK",   text: "CPU0: Virtual CyberCore Processor @ 4.20GHz detected." },
+            { tag: "OK",   text: "Memory check: 65536 MB ECC RAM verified." },
+            { tag: "INFO", text: "Mounting virtual filesystem /dev/nvme0n1p1 -> /root..." },
+            { tag: "OK",   text: "Loaded typography modules: Vazirmatn, Lalezar, JetBrains Mono." },
+            { tag: "OK",   text: "Starting WebCrypto SHA-256 / CSPRNG security subsystem..." },
+            { tag: "WARN", text: "Firewall policy set to STRICT. Unauthorized packets dropped." },
+            { tag: "OK",   text: "Establishing secure TLS 1.3 uplink to amirzh0.github.io..." },
+            { tag: "OK",   text: "Compiling interactive IDE & ZSH shell environment [by sa]..." },
+            { tag: "INFO", text: "System ready. Launching graphical interface..." }
+        ];
+
+        const bootScreen = document.getElementById('boot-screen');
+        const bootLogsContainer = document.getElementById('boot-logs-container');
+        const bootBar = document.getElementById('boot-bar');
+        const bootPctText = document.getElementById('boot-pct-text');
+        let bootIndex = 0;
+        let bootDone = false;
+
+        function finishBoot() {
+            if (bootDone) return;
+            bootDone = true;
+            bootScreen.classList.add('hidden');
+            sfx.playSuccess();
+        }
+
+        function runBootStep() {
+            if (bootDone) return;
+            if (bootIndex < bootMessages.length) {
+                const item = bootMessages[bootIndex];
+                const line = document.createElement('div');
+                line.className = 'boot-log-line';
+                const tagClass = item.tag === 'OK' ? 'boot-ok' : (item.tag === 'WARN' ? 'boot-warn' : 'boot-info');
+                line.innerHTML = `<span>[${(bootIndex * 0.14).toFixed(4)}]</span> <span class="${tagClass}">[${item.tag}]</span> <span>${item.text}</span>`;
+                bootLogsContainer.appendChild(line);
+                bootLogsContainer.scrollTop = bootLogsContainer.scrollHeight;
+
+                bootIndex++;
+                const pct = Math.round((bootIndex / bootMessages.length) * 100);
+                bootBar.style.width = pct + '%';
+                bootPctText.textContent = pct + '%';
+                sfx.playTick(320 + bootIndex * 45, 0.018);
+
+                setTimeout(runBootStep, 110);
+            } else {
+                setTimeout(finishBoot, 280);
+            }
+        }
+
+        document.getElementById('btn-skip-boot').addEventListener('click', finishBoot);
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && !bootDone) finishBoot();
+        });
+        window.addEventListener('DOMContentLoaded', () => setTimeout(runBootStep, 120));
+
+        /* ----------------------------------------------------------------------
+           C. TOAST NOTIFICATION HELPER
+           ---------------------------------------------------------------------- */
+        function showToast(msg) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'cyber-toast';
+            toast.textContent = msg;
+            container.appendChild(toast);
+            sfx.playSuccess();
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 250);
+            }, 2600);
+        }
+
+        function copyTextById(elementId) {
+            const text = document.getElementById(elementId).textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('📋 در کلیپ‌بورد کپی شد!');
+            });
+        }
+
+        /* ----------------------------------------------------------------------
+           D. NAVIGATION TABS & THEME ENGINE
+           ---------------------------------------------------------------------- */
+        const navTabs = document.querySelectorAll('.nav-tab');
+        const tabPanels = document.querySelectorAll('.tab-panel');
+
+        function switchTab(targetId) {
+            navTabs.forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.target === targetId);
+            });
+            tabPanels.forEach(panel => {
+                panel.classList.toggle('active', panel.id === targetId);
+            });
+            sfx.playTick(600, 0.03);
+            if (targetId === 'tab-terminal') {
+                setTimeout(() => document.getElementById('terminal-input').focus(), 100);
+            }
+        }
+
+        navTabs.forEach(btn => {
+            btn.addEventListener('click', () => switchTab(btn.dataset.target));
+        });
+
+        function setTheme(themeName) {
+            document.documentElement.setAttribute('data-theme', themeName);
+            document.querySelectorAll('.theme-swatch').forEach(s => {
+                s.classList.toggle('active', s.getAttribute('onclick').includes(themeName));
+            });
+            showToast(`🎨 تم سیستم به ${themeName.toUpperCase()} تغییر یافت`);
+        }
+
+        document.getElementById('btn-toggle-sound').addEventListener('click', function() {
+            sfx.enabled = !sfx.enabled;
+            this.classList.toggle('active', sfx.enabled);
+            this.textContent = sfx.enabled ? '🔊' : '🔇';
+        });
+
+        document.getElementById('btn-toggle-crt').addEventListener('click', function() {
+            const layer = document.getElementById('scanlines-layer');
+            layer.classList.toggle('disabled');
+            this.classList.toggle('active', !layer.classList.contains('disabled'));
+        });
+
+        /* ----------------------------------------------------------------------
+           E. HERO TYPEWRITER & UPTIME CLOCK
+           ---------------------------------------------------------------------- */
+        const heroPhrases = [
+            "✨ به زودی محتوای جذاب و ابزارهای متن‌باز اضافه می‌شوند...",
+            "🚀 میزبانی شده روی زیرساخت ابری GitHub Pages — سریع و رایگان!",
+            "💻 طراحی و مهندسی شده با ❤️ توسط sa برای amirzh0",
+            "🔐 مجهز به شل تعاملی لینوکس و آزمایشگاه رمزنگاری SHA-256"
+        ];
+        let hpIndex = 0, hpChar = 0, hpDeleting = false;
+        const heroTwEl = document.getElementById('hero-typewriter');
+
+        function tickHeroTypewriter() {
+            const current = heroPhrases[hpIndex];
+            if (hpDeleting) {
+                hpChar--;
+                heroTwEl.textContent = current.substring(0, hpChar);
+            } else {
+                hpChar++;
+                heroTwEl.textContent = current.substring(0, hpChar);
+            }
+
+            let delay = hpDeleting ? 28 : 55;
+            if (!hpDeleting && hpChar === current.length) {
+                delay = 2400;
+                hpDeleting = true;
+            } else if (hpDeleting && hpChar === 0) {
+                hpDeleting = false;
+                hpIndex = (hpIndex + 1) % heroPhrases.length;
+                delay = 350;
+            }
+            setTimeout(tickHeroTypewriter, delay);
+        }
+        tickHeroTypewriter();
+
+        const startTimestamp = Date.now();
+        function updateClocks() {
+            const now = new Date();
+            document.getElementById('nav-clock').textContent = now.toTimeString().split(' ')[0];
+
+            const diffSec = Math.floor((Date.now() - startTimestamp) / 1000);
+            const hrs = String(Math.floor(diffSec / 3600)).padStart(2, '0');
+            const mins = String(Math.floor((diffSec % 3600) / 60)).padStart(2, '0');
+            const secs = String(diffSec % 60).padStart(2, '0');
+            document.getElementById('nav-uptime').textContent = `${hrs}:${mins}:${secs}`;
+        }
+        setInterval(updateClocks, 1000);
+        updateClocks();
+
+        /* ----------------------------------------------------------------------
+           F. MULTI-FILE CODE IDE & EXECUTION SIMULATOR
+           ---------------------------------------------------------------------- */
+        const ideFiles = {
+            "profile.js": {
+                lang: "JavaScript (ES2026)",
+                output: "✅ [NODE v22.4] Executed profile.js -> Status: READY | Architect: sa | Target: amirzh0.github.io",
+                lines: [
+                    `<span class="syn-cmt">// amirzh0 — Core Developer Configuration</span>`,
+                    `<span class="syn-kw">const</span> <span class="syn-prop">workstation</span> = {`,
+                    `  owner: <span class="syn-str">"amirzh0"</span>,`,
+                    `  architect: <span class="syn-str">"sa"</span>,`,
+                    `  platform: <span class="syn-str">"GitHub Pages Cloud"</span>,`,
+                    `  stack: [<span class="syn-str">"Python"</span>, <span class="syn-str">"JavaScript"</span>, <span class="syn-str">"Linux"</span>, <span class="syn-str">"AppSec"</span>],`,
+                    `  status: <span class="syn-str">"Building awesome tools..."</span>,`,
+                    `  freeHosting: <span class="syn-bool">true</span>`,
+                    `};`,
+                    ``,
+                    `<span class="syn-kw">function</span> <span class="syn-fn">deployMission</span>(config) {`,
+                    `  console.<span class="syn-fn">log</span>(<span class="syn-str">\`🚀 Deploying \${config.owner} by \${config.architect}...\`</span>);`,
+                    `  <span class="syn-kw">return</span> <span class="syn-bool">true</span>;`,
+                    `}`,
+                    `<span class="syn-fn">deployMission</span>(workstation);`
+                ]
+            },
+            "security.py": {
+                lang: "Python 3.12",
+                output: "🛡️ [PYTHON] Security Audit Complete -> 0 Vulnerabilities Found. Headers & TLS 1.3 Verified.",
+                lines: [
+                    `<span class="syn-cmt">#!/usr/bin/env python3</span>`,
+                    `<span class="syn-cmt"># Automated Security &amp; Integrity Verifier by sa</span>`,
+                    `<span class="syn-kw">import</span> hashlib`,
+                    `<span class="syn-kw">import</span> secrets`,
+                    ``,
+                    `<span class="syn-kw">class</span> <span class="syn-fn">NodeAuditor</span>:`,
+                    `    <span class="syn-kw">def</span> <span class="syn-fn">__init__</span>(self, domain: str):`,
+                    `        self.domain = domain`,
+                    `        self.token = secrets.<span class="syn-fn">token_hex</span>(<span class="syn-num">16</span>)`,
+                    ``,
+                    `    <span class="syn-kw">def</span> <span class="syn-fn">verify_signature</span>(self) -> str:`,
+                    `        payload = <span class="syn-str">f"{self.domain}:sa:verified"</span>.<span class="syn-fn">encode</span>()`,
+                    `        <span class="syn-kw">return</span> hashlib.<span class="syn-fn">sha256</span>(payload).<span class="syn-fn">hexdigest</span>()[:<span class="syn-num">24</span>]`,
+                    ``,
+                    `audit = <span class="syn-fn">NodeAuditor</span>(<span class="syn-str">"amirzh0.github.io"</span>)`,
+                    `<span class="syn-fn">print</span>(<span class="syn-str">f"[+] Node Signature: {audit.verify_signature()}"</span>)`
+                ]
+            },
+            "deploy.sh": {
+                lang: "Bash / ZSH Script",
+                output: "🚀 [GIT-PAGES] Branch 'main' pushed to origin. Live at https://amirzh0.github.io",
+                lines: [
+                    `<span class="syn-cmt">#!/usr/bin/env zsh</span>`,
+                    `<span class="syn-cmt"># Zero-Downtime GitHub Pages Deployment Script</span>`,
+                    `<span class="syn-kw">set</span> -euo pipefail`,
+                    ``,
+                    `REPO=<span class="syn-str">"git@github.com:amirzh0/amirzh0.github.io.git"</span>`,
+                    `AUTHOR=<span class="syn-str">"sa"</span>`,
+                    ``,
+                    `<span class="syn-fn">echo</span> <span class="syn-str">"[*] Optimizing assets &amp; running integrity checks..."</span>`,
+                    `git add -A`,
+                    `git commit -m <span class="syn-str">"feat(ui): upgrade cyber workstation by $AUTHOR"</span>`,
+                    `git push -u origin main --force`,
+                    `<span class="syn-fn">echo</span> <span class="syn-str">"[+] Deployment successful! ✨"</span>`
+                ]
+            },
+            "manifest.json": {
+                lang: "JSON Schema",
+                output: "📋 [JSON VALIDATOR] Schema valid. 0 syntax errors.",
+                lines: [
+                    `{`,
+                    `  <span class="syn-prop">"name"</span>: <span class="syn-str">"amirzh0-cyber-portfolio"</span>,`,
+                    `  <span class="syn-prop">"version"</span>: <span class="syn-str">"4.8.0"</span>,`,
+                    `  <span class="syn-prop">"created_by"</span>: <span class="syn-str">"sa"</span>,`,
+                    `  <span class="syn-prop">"hosting"</span>: <span class="syn-str">"GitHub Pages"</span>,`,
+                    `  <span class="syn-prop">"features"</span>: [`,
+                    `    <span class="syn-str">"Interactive ZSH Shell"</span>,`,
+                    `    <span class="syn-str">"Real-time SHA-256 &amp; Base64 Lab"</span>,`,
+                    `    <span class="syn-str">"60FPS Matrix &amp; Telemetry Canvas"</span>`,
+                    `  ],`,
+                    `  <span class="syn-prop">"license"</span>: <span class="syn-str">"MIT"</span>`,
+                    `}`
+                ]
+            }
+        };
+
+        let currentIdeFile = "profile.js";
+        const ideCodeView = document.getElementById('ide-code-view');
+        const ideLangIndicator = document.getElementById('ide-lang-indicator');
+        const ideOutputDrawer = document.getElementById('ide-output-drawer');
+
+        function renderIdeFile(filename) {
+            currentIdeFile = filename;
+            const fileObj = ideFiles[filename];
+            ideLangIndicator.textContent = fileObj.lang;
+            ideOutputDrawer.classList.remove('open');
+
+            let html = '<table class="code-table"><tbody>';
+            fileObj.lines.forEach((lineContent, idx) => {
+                html += `<tr class="code-line-row">
+                    <td class="line-num">${idx + 1}</td>
+                    <td class="line-code">${lineContent}</td>
+                </tr>`;
+            });
+            html += '</tbody></table>';
+            ideCodeView.innerHTML = html;
+        }
+
+        document.querySelectorAll('.ide-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.ide-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                renderIdeFile(tab.dataset.file);
+                sfx.playTick(720, 0.02);
+            });
+        });
+
+        document.getElementById('btn-run-code').addEventListener('click', () => {
+            const fileObj = ideFiles[currentIdeFile];
+            ideOutputDrawer.textContent = fileObj.output;
+            ideOutputDrawer.classList.add('open');
+            sfx.playSuccess();
+        });
+
+        document.getElementById('btn-copy-ide').addEventListener('click', () => {
+            const rawText = ideCodeView.innerText;
+            navigator.clipboard.writeText(rawText).then(() => showToast('📋 سورس فایل کپی شد!'));
+        });
+
+        renderIdeFile("profile.js");
+
+        /* ----------------------------------------------------------------------
+           G. INTERACTIVE ZSH TERMINAL EMULATOR
+           ---------------------------------------------------------------------- */
+        const termHistoryEl = document.getElementById('terminal-history');
+        const termInputEl = document.getElementById('terminal-input');
+        const termScreenEl = document.getElementById('terminal-emulator');
+        let cmdHistory = [];
+        let cmdHistoryIdx = -1;
+
+        function appendTermOutput(htmlContent, cmdText = null) {
+            if (cmdText !== null) {
+                const cmdRow = document.createElement('div');
+                cmdRow.className = 'term-line';
+                cmdRow.innerHTML = `<span class="term-prompt">amirzh0@github</span> <span class="term-path">~/sa-workstation ❯</span> <span>${cmdText}</span>`;
+                termHistoryEl.appendChild(cmdRow);
+            }
+            if (htmlContent) {
+                const outRow = document.createElement('div');
+                outRow.className = 'term-line';
+                outRow.style.color = '#cbd5e1';
+                outRow.style.marginBottom = '8px';
+                outRow.innerHTML = htmlContent;
+                termHistoryEl.appendChild(outRow);
+            }
+            const container = document.getElementById('terminal-screen');
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function executeTerminalCommand(rawInput) {
+            const cmdLine = rawInput.trim();
+            if (!cmdLine) return;
+
+            cmdHistory.push(cmdLine);
+            cmdHistoryIdx = cmdHistory.length;
+            sfx.playTick(540, 0.03);
+
+            const parts = cmdLine.split(/\s+/);
+            const cmd = parts[0].toLowerCase();
+            const args = parts.slice(1).join(' ');
+
+            switch (cmd) {
+                case 'help':
+                    appendTermOutput(`
+                        <div style="color: var(--accent-primary); font-weight:700;">Available CyberOS ZSH Commands:</div>
+                        <div>  <strong style="color:#fff;">whoami</strong>         — Display developer &amp; architect identity</div>
+                        <div>  <strong style="color:#fff;">neofetch</strong>       — Display system specifications &amp; ASCII art</div>
+                        <div>  <strong style="color:#fff;">ls -la</strong>         — List workspace directory files</div>
+                        <div>  <strong style="color:#fff;">cat about.txt</strong>  — Read site mission statement</div>
+                        <div>  <strong style="color:#fff;">scan --ports</strong>   — Run simulated security port audit</div>
+                        <div>  <strong style="color:#fff;">theme [name]</strong>   — Change color theme (cyan, matrix, synthwave, crimson, amber)</div>
+                        <div>  <strong style="color:#fff;">matrix</strong>         — Toggle intensive background matrix mode</div>
+                        <div>  <strong style="color:#fff;">clear</strong>          — Clear terminal screen</div>
+                    `, cmdLine);
+                    break;
+
+                case 'whoami':
+                    appendTermOutput(`User: <strong style="color:var(--accent-primary)">amirzh0</strong> | Architect &amp; Builder: <strong style="color:var(--accent-success)">sa</strong> | Host: GitHub Pages Cloud`, cmdLine);
+                    break;
+
+                case 'ls':
+                    appendTermOutput(`
+                        <div style="font-family:var(--font-mono); color:#94a3b8;">
+                        drwxr-xr-x  6 amirzh0 sa  4096 Nov 12 14:40 <span style="color:var(--accent-primary)">.</span><br>
+                        -rw-r--r--  1 amirzh0 sa  1650 Nov 12 14:40 <span style="color:#fff">index.html</span><br>
+                        -rwxr-xr-x  1 amirzh0 sa  2048 Nov 12 14:40 <span style="color:var(--accent-success)">security.py</span><br>
+                        -rw-r--r--  1 amirzh0 sa   840 Nov 12 14:40 <span style="color:#fff">about.txt</span><br>
+                        drwxr-xr-x  2 amirzh0 sa  4096 Nov 12 14:40 <span style="color:var(--accent-primary)">.github/workflows</span>
+                        </div>
+                    `, cmdLine);
+                    break;
+
+                case 'cat':
+                    appendTermOutput(`
+                        <div style="border-left: 3px solid var(--accent-primary); padding-left: 10px; color: #f1f5f9;">
+                        🚀 <strong>سایت من روی گیت‌هاب (amirzh0)</strong><br>
+                        این سایت با GitHub Pages ساخته شده و رایگان است!<br>
+                        ✨ به زودی محتوای جذاب و پروژه‌های متن‌باز منتشر می‌شود.<br>
+                        ساخته شده با ❤️ توسط <strong>sa</strong>
+                        </div>
+                    `, cmdLine);
+                    break;
+
+                case 'neofetch':
+                    appendTermOutput(`
+                        <div style="display:flex; gap:20px; flex-wrap:wrap; align-items:center; color:var(--accent-primary);">
+<pre style="margin:0; line-height:1.25; color:var(--accent-primary);">
+   /\\___/\\
+  (  o o  )   amirzh0@github-pages
+  /   *   \\   --------------------
+  \\__\\_/__/   OS: CyberOS v4.8 LTS
+    /   \\     Architect: sa
+   /_____\\    Shell: zsh 5.9 (web)
+              Packages: VanillaJS, WebCrypto
+              Uptime: Active
+</pre>
+                        </div>
+                    `, cmdLine);
+                    break;
+
+                case 'scan':
+                    appendTermOutput(`
+                        <div style="color:var(--accent-warning);">[*] Initiating Nmap security scan on amirzh0.github.io...</div>
+                        <div style="color:var(--accent-success);">PORT     STATE SERVICE   VERSION</div>
+                        <div>80/tcp   open  http      GitHub.com CDN Redirect</div>
+                        <div>443/tcp  open  ssl/https TLSv1.3 (AEAD-AES256-GCM-SHA384)</div>
+                        <div style="color:var(--accent-primary);">[+] 0 vulnerabilities detected. Hardened by sa.</div>
+                    `, cmdLine);
+                    break;
+
+                case 'theme':
+                    const tName = args.trim().toLowerCase();
+                    if (['cyan', 'matrix', 'synthwave', 'crimson', 'amber'].includes(tName)) {
+                        setTheme(tName);
+                        appendTermOutput(`Theme switched to <strong>${tName}</strong>.`, cmdLine);
+                    } else {
+                        appendTermOutput(`Usage: theme [cyan | matrix | synthwave | crimson | amber]`, cmdLine);
+                    }
+                    break;
+
+                case 'matrix':
+                    setTheme('matrix');
+                    appendTermOutput(`<span style="color:#22c55e;">Wake up, amirzh0... The Matrix has you. (Theme set to Matrix Green)</span>`, cmdLine);
+                    break;
+
+                case 'clear':
+                    termHistoryEl.innerHTML = '';
+                    break;
+
+                default:
+                    appendTermOutput(`<span style="color:var(--accent-danger);">zsh: command not found: ${cmd}</span>. Type <strong style="color:var(--accent-primary);">help</strong> for available commands.`, cmdLine);
+            }
+        }
+
+        termInputEl.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                executeTerminalCommand(termInputEl.value);
+                termInputEl.value = '';
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                if (cmdHistoryIdx > 0) {
+                    cmdHistoryIdx--;
+                    termInputEl.value = cmdHistory[cmdHistoryIdx];
+                }
+            } else if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                if (cmdHistoryIdx < cmdHistory.length - 1) {
+                    cmdHistoryIdx++;
+                    termInputEl.value = cmdHistory[cmdHistoryIdx];
+                } else {
+                    cmdHistoryIdx = cmdHistory.length;
+                    termInputEl.value = '';
+                }
+            } else {
+                sfx.playTick(800, 0.012);
+            }
+        });
+
+        // Initial terminal welcome banner
+        appendTermOutput(`Welcome to <strong>amirzh0 CyberOS Shell</strong> (built by <strong>sa</strong>). Type <code style="color:var(--accent-primary)">help</code> or click a chip below.`);
+
+        /* ----------------------------------------------------------------------
+           H. CRYPTOGRAPHY, SHA-256 & PASSWORD GENERATOR ENGINE
+           ---------------------------------------------------------------------- */
+        const cryptoInput = document.getElementById('crypto-input');
+        const outSha256 = document.getElementById('out-sha256');
+        const outBase64 = document.getElementById('out-base64');
+        const outHex = document.getElementById('out-hex');
+        const outBinary = document.getElementById('out-binary');
+        const cryptoCharCount = document.getElementById('crypto-char-count');
+
+        async function updateCryptoOutputs() {
+            const val = cryptoInput.value;
+            cryptoCharCount.textContent = `${val.length} chars`;
+
+            if (!val) {
+                outSha256.textContent = '-';
+                outBase64.textContent = '-';
+                outHex.textContent = '-';
+                outBinary.textContent = '-';
+                return;
+            }
+
+            // UTF-8 safe Base64
+            try {
+                const bytes = new TextEncoder().encode(val);
+                let binStr = '';
+                bytes.forEach(b => binStr += String.fromCharCode(b));
+                outBase64.textContent = btoa(binStr);
+
+                // Hex
+                outHex.textContent = Array.from(bytes).map(b => b.toString(16).padStart(2, '0')).join(' ');
+
+                // Binary (first 16 bytes max for display clarity)
+                outBinary.textContent = Array.from(bytes.slice(0, 12)).map(b => b.toString(2).padStart(8, '0')).join(' ') + (bytes.length > 12 ? ' ...' : '');
+
+                // Real SHA-256 via SubtleCrypto
+                if (window.crypto && window.crypto.subtle) {
+                    const hashBuf = await window.crypto.subtle.digest('SHA-256', bytes);
+                    const hashHex = Array.from(new Uint8Array(hashBuf)).map(b => b.toString(16).padStart(2, '0')).join('');
+                    outSha256.textContent = hashHex;
+                }
+            } catch (err) {
+                outBase64.textContent = 'Encoding Error';
+            }
+        }
+
+        cryptoInput.addEventListener('input', updateCryptoOutputs);
+        updateCryptoOutputs();
+
+        // CSPRNG Password Generator
+        const passSlider = document.getElementById('pass-len-slider');
+        const passLenLabel = document.getElementById('pass-len-label');
+        const generatedPassBox = document.getElementById('generated-pass-box');
+        const passEntropyBadge = document.getElementById('pass-entropy-badge');
+
+        function generateSecurePassword() {
+            const length = parseInt(passSlider.value, 10);
+            passLenLabel.textContent = length;
+
+            let charset = '';
+            if (document.getElementById('chk-upper').checked) charset += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            if (document.getElementById('chk-lower').checked) charset += 'abcdefghijklmnopqrstuvwxyz';
+            if (document.getElementById('chk-num').checked)   charset += '0123456789';
+            if (document.getElementById('chk-sym').checked)   charset += '!@#$%^&*()_+-=[]{}|;:,.<>?';
+
+            if (!charset) charset = 'abcdef0123456789';
+
+            const randomValues = new Uint32Array(length);
+            window.crypto.getRandomValues(randomValues);
+
+            let result = '';
+            for (let i = 0; i < length; i++) {
+                result += charset[randomValues[i] % charset.length];
+            }
+
+            generatedPassBox.textContent = result;
+            const entropy = Math.round(length * Math.log2(charset.length));
+            passEntropyBadge.textContent = `ENTROPY: ${entropy} bits`;
+        }
+
+        passSlider.addEventListener('input', generateSecurePassword);
+        document.getElementById('btn-regen-pass').addEventListener('click', () => {
+            generateSecurePassword();
+            sfx.playTick(750, 0.03);
+        });
+        ['chk-upper', 'chk-lower', 'chk-num', 'chk-sym'].forEach(id => {
+            document.getElementById(id).addEventListener('change', generateSecurePassword);
+        });
+        generateSecurePassword();
+
+        /* ----------------------------------------------------------------------
+           I. TELEMETRY GRAPH & NETWORK PACKET STREAM
+           ---------------------------------------------------------------------- */
+        const telCanvas = document.getElementById('telemetry-canvas');
+        const telCtx = telCanvas.getContext('2d');
+        let cpuHistory = new Array(60).fill(20);
+        let ramHistory = new Array(60).fill(40);
+
+        function updateTelemetryGraph() {
+            const nextCpu = Math.max(8, Math.min(92, cpuHistory[cpuHistory.length - 1] + (Math.random() * 18 - 9)));
+            const nextRam = Math.max(25, Math.min(75, ramHistory[ramHistory.length - 1] + (Math.random() * 6 - 3)));
+            cpuHistory.push(nextCpu);
+            cpuHistory.shift();
+            ramHistory.push(nextRam);
+            ramHistory.shift();
+
+            document.getElementById('cpu-load-badge').textContent = `CPU: ${Math.round(nextCpu)}% | RAM: ${Math.round(nextRam)}%`;
+
+            const w = telCanvas.width;
+            const h = telCanvas.height;
+            telCtx.clearRect(0, 0, w, h);
+
+            // Grid lines
+            telCtx.strokeStyle = 'rgba(255,255,255,0.05)';
+            telCtx.lineWidth = 1;
+            for (let y = 30; y < h; y += 30) {
+                telCtx.beginPath();
+                telCtx.moveTo(0, y);
+                telCtx.lineTo(w, y);
+                telCtx.stroke();
+            }
+
+            // Draw CPU curve
+            const accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accent-primary').trim() || '#38bdf8';
+            telCtx.strokeStyle = accentColor;
+            telCtx.lineWidth = 2.2;
+            telCtx.beginPath();
+            cpuHistory.forEach((val, idx) => {
+                const x = (idx / (cpuHistory.length - 1)) * w;
+                const y = h - (val / 100) * h;
+                if (idx === 0) telCtx.moveTo(x, y);
+                else telCtx.lineTo(x, y);
+            });
+            telCtx.stroke();
+        }
+        setInterval(updateTelemetryGraph, 650);
+        updateTelemetryGraph();
+
+        // Live Network Log Stream
+        const netLogEl = document.getElementById('network-log-stream');
+        const sampleEvents = [
+            "GET /index.html HTTP/2.0 -> 200 OK (1.2ms)",
+            "TLSv1.3 Handshake verified for amirzh0.github.io",
+            "WAF Ruleset: 0 anomalies detected from client IP",
+            "Worker thread synchronized with GitHub Pages CDN",
+            "CRON: Integrity hash check passed [by sa]",
+            "DNS-over-HTTPS query resolved -> 185.199.108.153"
+        ];
+
+        function pushNetworkLog(customText = null) {
+            const line = document.createElement('div');
+            const ts = new Date().toTimeString().split(' ')[0];
+            const msg = customText || sampleEvents[Math.floor(Math.random() * sampleEvents.length)];
+            line.innerHTML = `<span style="color:var(--text-muted)">[${ts}]</span> <span style="color:var(--accent-primary)">INFO</span> ${msg}`;
+            netLogEl.appendChild(line);
+            if (netLogEl.children.length > 25) netLogEl.removeChild(netLogEl.firstChild);
+            netLogEl.scrollTop = netLogEl.scrollHeight;
+        }
+        setInterval(() => pushNetworkLog(), 2800);
+        pushNetworkLog("System Telemetry Initialized.");
+
+        function triggerSimulatedAudit() {
+            pushNetworkLog("⚡ Running manual node security check...");
+            setTimeout(() => {
+                pushNetworkLog("✅ All ports & SSL certificates healthy!");
+                showToast("🛡️ تست امنیت و پینگ نود با موفقیت انجام شد.");
+            }, 500);
+        }
+
+        /* ----------------------------------------------------------------------
+           J. COMMAND PALETTE (CTRL + K)
+           ---------------------------------------------------------------------- */
+        const cmdModal = document.getElementById('cmd-modal');
+        const cmdSearchInput = document.getElementById('cmd-search-input');
+
+        function toggleCmdModal(forceState) {
+            const isOpen = typeof forceState === 'boolean' ? forceState : !cmdModal.classList.contains('open');
+            cmdModal.classList.toggle('open', isOpen);
+            if (isOpen) {
+                cmdSearchInput.value = '';
+                cmdSearchInput.focus();
+                sfx.playTick(660, 0.03);
+            }
+        }
+
+        document.getElementById('btn-open-palette').addEventListener('click', () => toggleCmdModal(true));
+        cmdModal.addEventListener('click', (e) => {
+            if (e.target === cmdModal) toggleCmdModal(false);
+        });
+
+        window.addEventListener('keydown', (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+                e.preventDefault();
+                toggleCmdModal();
+            } else if (e.key === 'Escape' && cmdModal.classList.contains('open')) {
+                toggleCmdModal(false);
+            }
+        });
+
+        function runPaletteAction(action) {
+            toggleCmdModal(false);
+            if (action.startsWith('tab-')) {
+                switchTab(action);
+            } else if (action.startsWith('theme-')) {
+                setTheme(action.replace('theme-', ''));
+            }
+        }
+
+        cmdSearchInput.addEventListener('input', () => {
+            const q = cmdSearchInput.value.toLowerCase();
+            document.querySelectorAll('#cmd-list .cmd-item').forEach(item => {
+                item.style.display = item.textContent.toLowerCase().includes(q) ? 'flex' : 'none';
+            });
+        });
+
+        /* ----------------------------------------------------------------------
+           K. INTERACTIVE CYBER PARTICLE NETWORK BACKGROUND CANVAS
+           ---------------------------------------------------------------------- */
+        const bgCanvas = document.getElementById('bg-canvas');
+        const bgCtx = bgCanvas.getContext('2d');
+        let particles = [];
+        let mouse = { x: -1000, y: -1000 };
+
+        function resizeBgCanvas() {
+            bgCanvas.width = window.innerWidth;
+            bgCanvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeBgCanvas);
+        resizeBgCanvas();
+
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+        });
+
+        for (let i = 0; i < 55; i++) {
+            particles.push({
+                x: Math.random() * window.innerWidth,
+                y: Math.random() * window.innerHeight,
+                vx: (Math.random() - 0.5) * 0.65,
+                vy: (Math.random() - 0.5) * 0.65,
+                r: Math.random() * 1.8 + 1
+            });
+        }
+
+        function animateBgParticles() {
+            bgCtx.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
+            const rgb = getComputedStyle(document.documentElement).getPropertyValue('--accent-primary-rgb').trim() || '56, 189, 248';
+
+            for (let i = 0; i < particles.length; i++) {
+                const p = particles[i];
+                p.x += p.vx;
+                p.y += p.vy;
+
+                if (p.x < 0 || p.x > bgCanvas.width) p.vx *= -1;
+                if (p.y < 0 || p.y > bgCanvas.height) p.vy *= -1;
+
+                bgCtx.beginPath();
+                bgCtx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                bgCtx.fillStyle = `rgba(${rgb}, 0.65)`;
+                bgCtx.fill();
+
+                for (let j = i + 1; j < particles.length; j++) {
+                    const p2 = particles[j];
+                    const dist = Math.hypot(p.x - p2.x, p.y - p2.y);
+                    if (dist < 135) {
+                        bgCtx.beginPath();
+                        bgCtx.moveTo(p.x, p.y);
+                        bgCtx.lineTo(p2.x, p2.y);
+                        bgCtx.strokeStyle = `rgba(${rgb}, ${(1 - dist / 135) * 0.22})`;
+                        bgCtx.stroke();
+                    }
+                }
+
+                const mDist = Math.hypot(p.x - mouse.x, p.y - mouse.y);
+                if (mDist < 160) {
+                    bgCtx.beginPath();
+                    bgCtx.moveTo(p.x, p.y);
+                    bgCtx.lineTo(mouse.x, mouse.y);
+                    bgCtx.strokeStyle = `rgba(${rgb}, ${(1 - mDist / 160) * 0.45})`;
+                    bgCtx.stroke();
+                }
+            }
+            requestAnimationFrame(animateBgParticles);
+        }
+        animateBgParticles();
     </script>
 </body>
 </html>
